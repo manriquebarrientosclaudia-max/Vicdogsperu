@@ -1,0 +1,11 @@
+**/bin/
+**/obj/
+.vs/
+.git/
+.gitignore
+.gitattributes
+*.user
+appsettings.Development.json
+render.yaml
+README-RENDER.md
+Data/vicdogs_postgres.sql

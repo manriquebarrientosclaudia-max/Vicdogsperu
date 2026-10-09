@@ -1,0 +1,198 @@
+@model Canino
+@{
+    var esNuevo = Model.Id == 0;
+    ViewData["Title"] = esNuevo ? "Nuevo perro" : "Editar a " + Model.Nombre;
+}
+<div class="d-flex justify-content-between align-items-end mb-3">
+    <h1 class="titulo">@(esNuevo ? "Nuevo perro" : "Editar a " + Model.Nombre)</h1>
+    <a asp-action="@(esNuevo ? "Index" : "Details")" asp-route-id="@(esNuevo ? (int?)null : Model.Id)" class="btn btn-outline-dark">Cancelar</a>
+</div>
+
+<form asp-action="@(esNuevo ? "Create" : "Edit")" asp-route-id="@(esNuevo ? (int?)null : Model.Id)" method="post" enctype="multipart/form-data">
+    <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <section class="panel-caja mb-4">
+                <h2 class="titulo h5">Datos del perro</h2>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label asp-for="Nombre" class="form-label"></label>
+                        <input asp-for="Nombre" class="form-control" required />
+                        <span asp-validation-for="Nombre" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-3">
+                        <label asp-for="Sexo" class="form-label"></label>
+                        <select asp-for="Sexo" class="form-select" required>
+                            <option value="">Elige…</option>
+                            <option value="Macho">Macho</option>
+                            <option value="Hembra">Hembra</option>
+                        </select>
+                        <span asp-validation-for="Sexo" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-3">
+                        <label asp-for="EdadTexto" class="form-label"></label>
+                        <input asp-for="EdadTexto" class="form-control" placeholder="Ej. 2 años, 6 meses" />
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Raza" class="form-label"></label>
+                        <input asp-for="Raza" class="form-control" placeholder="Ej. Cruce de Labrador grande" />
+                    </div>
+                    <div class="col-md-3">
+                        <label asp-for="FechaNacimiento" class="form-label"></label>
+                        <input asp-for="FechaNacimiento" type="date" class="form-control" />
+                    </div>
+                    @if (esNuevo)
+                    {
+                        <div class="col-md-3">
+                            <label asp-for="PesoKg" class="form-label">Peso inicial (kg)</label>
+                            <input asp-for="PesoKg" type="number" step="0.01" min="0" class="form-control" />
+                            <span asp-validation-for="PesoKg" class="text-danger small"></span>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="col-md-3">
+                            <label class="form-label">Peso actual</label>
+                            <div class="form-control-plaintext fw-bold">@(Model.PesoKg.HasValue ? Model.PesoKg.Value.ToString("0.##") + " kg" : "Sin registro")</div>
+                            <div class="form-text">Se actualiza en «Control de peso», dentro de la ficha.</div>
+                        </div>
+                    }
+                    <div class="col-md-6">
+                        <label asp-for="ServicioId" class="form-label"></label>
+                        <select asp-for="ServicioId" asp-items="(SelectList)ViewBag.Servicios" class="form-select" required>
+                            <option value="">Elige…</option>
+                        </select>
+                        <span asp-validation-for="ServicioId" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="FechaRegistro" class="form-label"></label>
+                        <input asp-for="FechaRegistro" type="date" asp-format="{0:yyyy-MM-dd}" class="form-control" />
+                        <div class="form-text">En guardería educativa y hogar recreativo es la fecha de ingreso al servicio.</div>
+                    </div>
+                    <div class="col-md-3">
+                        <label asp-for="HospedajeDesde" class="form-label"></label>
+                        <input asp-for="HospedajeDesde" type="date" asp-format="{0:yyyy-MM-dd}" class="form-control" />
+                    </div>
+                    <div class="col-md-3">
+                        <label asp-for="HospedajeHasta" class="form-label"></label>
+                        <input asp-for="HospedajeHasta" type="date" asp-format="{0:yyyy-MM-dd}" class="form-control" />
+                        <span asp-validation-for="HospedajeHasta" class="text-danger small"></span>
+                    </div>
+                    <div class="col-12 form-text mt-0">Hospedado desde / hasta: solo si se queda a dormir. Déjalo vacío si no aplica.</div>
+                    <div class="col-md-6">
+                        <label asp-for="Distrito" class="form-label"></label>
+                        <input asp-for="Distrito" class="form-control" list="lista-distritos" placeholder="Ej. San Miguel" />
+                        <datalist id="lista-distritos">
+                            @foreach (var d in (List<string>)ViewBag.Distritos) { <option value="@d"></option> }
+                        </datalist>
+                    </div>
+                </div>
+            </section>
+
+            <section class="panel-caja mb-4">
+                <h2 class="titulo h5">Cuidado y alimentación</h2>
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label asp-for="TipoBano" class="form-label"></label>
+                        <select asp-for="TipoBano" class="form-select">
+                            <option value="">Sin indicar</option>
+                            <option value="Normal">Baño normal</option>
+                            <option value="Medicado">Baño medicado</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label asp-for="AlimentacionTipo" class="form-label"></label>
+                        <input asp-for="AlimentacionTipo" class="form-control" list="lista-alimento" placeholder="Ej. BARF" />
+                        <datalist id="lista-alimento">
+                            <option value="Galletas"></option><option value="Comida casera"></option><option value="BARF"></option>
+                            <option value="Galletas y comida casera"></option><option value="BARF y galletas"></option>
+                        </datalist>
+                    </div>
+                    <div class="col-md-4">
+                        <label asp-for="AlimentacionMarca" class="form-label"></label>
+                        <input asp-for="AlimentacionMarca" class="form-control" placeholder="Ej. Cambo, Royal Canin" />
+                    </div>
+                    <div class="col-md-4">
+                        <label asp-for="TipoAgua" class="form-label"></label>
+                        <select asp-for="TipoAgua" class="form-select">
+                            <option value="">Sin indicar</option>
+                            <option value="De la llave">De la llave</option>
+                            <option value="Hervida">Hervida</option>
+                            <option value="Mineral">Mineral</option>
+                            <option value="Cualquiera">Cualquiera</option>
+                        </select>
+                    </div>
+                    <div class="col-12">
+                        <label asp-for="Observaciones" class="form-label"></label>
+                        <textarea asp-for="Observaciones" class="form-control" rows="3"></textarea>
+                    </div>
+                </div>
+            </section>
+
+            <section class="panel-caja mb-4">
+                <h2 class="titulo h5">Redes sociales</h2>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label asp-for="Instagram" class="form-label"></label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-instagram"></i></span>
+                            <input asp-for="Instagram" class="form-control" placeholder="@@usuario o enlace del perfil" />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="TikTok" class="form-label"></label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-tiktok"></i></span>
+                            <input asp-for="TikTok" class="form-control" placeholder="@@usuario o enlace del perfil" />
+                        </div>
+                    </div>
+                    <div class="col-12 form-text mt-1">Déjalo vacío si no tiene. Puedes pegar el enlace completo o solo el usuario.</div>
+                </div>
+            </section>
+        </div>
+
+        <div class="col-lg-4">
+            <section class="panel-caja mb-4">
+                <h2 class="titulo h5">Foto</h2>
+                <img id="vista-foto" src="@Model.FotoOPlaceholder" alt="Vista previa de la foto" class="foto-form mb-3" />
+                <input type="file" name="foto" id="foto" accept="image/jpeg,image/png,image/webp" class="form-control" />
+                @Html.ValidationMessage("foto", new { @class = "text-danger small" })
+                @if (!esNuevo && !string.IsNullOrEmpty(Model.FotoUrl))
+                {
+                    <div class="form-check mt-2">
+                        <input class="form-check-input" type="checkbox" name="quitarFoto" value="true" id="quitarFoto" />
+                        <label class="form-check-label" for="quitarFoto">Quitar la foto actual</label>
+                    </div>
+                }
+            </section>
+
+            <section class="panel-caja mb-4">
+                <h2 class="titulo h5">Tutores</h2>
+                <label class="form-label" for="tutorIds">Elige uno o más (Ctrl o ⌘ para varios)</label>
+                <select name="tutorIds" id="tutorIds" multiple size="7" class="form-select mb-3" asp-items="(MultiSelectList)ViewBag.Tutores"></select>
+                <label class="form-label" for="nuevoTutor">¿El tutor no está en la lista? Escribe su nombre</label>
+                <input class="form-control" id="nuevoTutor" name="nuevoTutor" placeholder="Nombre y apellido" />
+                <div class="form-text">Podrás agregar teléfono y correo después, desde Tutores.</div>
+            </section>
+
+            <section class="panel-caja mb-4">
+                <div class="form-check form-switch">
+                    <input asp-for="Activo" class="form-check-input" />
+                    <label asp-for="Activo" class="form-check-label">Perro activo</label>
+                </div>
+                <div class="form-text">Desactívalo si ya no usa el servicio; conserva todo su historial.</div>
+            </section>
+
+            <button type="submit" class="btn btn-azul w-100 py-2">@(esNuevo ? "Registrar perro" : "Guardar cambios")</button>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+<script>
+    document.getElementById('foto').addEventListener('change', function (e) {
+        var f = e.target.files[0];
+        if (f) document.getElementById('vista-foto').src = URL.createObjectURL(f);
+    });
+</script>
+}

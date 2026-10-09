@@ -1,0 +1,125 @@
+@model List<Canino>
+@{ ViewData["Title"] = "Redes"; }
+<div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-3">
+    <div>
+        <h1 class="titulo">Redes sociales</h1>
+        <p class="text-muted mb-0">@Model.Count de @ViewBag.TotalCaninos perros activos tienen Instagram o TikTok registrado.</p>
+    </div>
+</div>
+
+<form method="get" asp-action="Index" class="filtros mb-3">
+    <div class="row g-2 align-items-end">
+        <div class="col-12 col-md-6">
+            <label class="form-label" for="q">Buscar por perro o usuario</label>
+            <input class="form-control" id="q" name="q" value="@ViewBag.Q" />
+        </div>
+        <div class="col-12 col-md-3 d-flex gap-2">
+            <button type="submit" class="btn btn-dark flex-fill">Buscar</button>
+            <a asp-action="Index" class="btn btn-outline-dark">Limpiar</a>
+        </div>
+    </div>
+</form>
+
+@if (!Model.Any())
+{
+    <div class="panel-caja vacio">
+        Todavía no hay perros con redes. Entra a la ficha de un perro, pulsa «Editar datos» y completa
+        «Redes sociales» con su usuario o el enlace de su perfil.
+    </div>
+}
+else
+{
+    <section class="panel-caja mb-3 etiquetador">
+        <h2 class="titulo h5">Etiquetas para tus videos</h2>
+        <p class="small text-muted mb-2">Marca los perros que salen en el video y copia sus etiquetas ya listas para pegar en la descripción.</p>
+        <div class="d-flex flex-wrap gap-2 mb-2">
+            <button type="button" class="btn btn-sm btn-outline-dark" id="marcar-todos">Marcar todos</button>
+            <button type="button" class="btn btn-sm btn-outline-dark" id="desmarcar">Desmarcar</button>
+        </div>
+        <div class="row g-2">
+            <div class="col-md-6">
+                <label class="form-label" for="tags-ig"><i class="bi bi-instagram"></i> Instagram</label>
+                <div class="input-group">
+                    <input class="form-control" id="tags-ig" readonly placeholder="Marca perros para ver sus etiquetas" />
+                    <button type="button" class="btn btn-azul" id="copiar-ig"><i class="bi bi-clipboard"></i> Copiar</button>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label" for="tags-tt"><i class="bi bi-tiktok"></i> TikTok</label>
+                <div class="input-group">
+                    <input class="form-control" id="tags-tt" readonly placeholder="Marca perros para ver sus etiquetas" />
+                    <button type="button" class="btn btn-azul" id="copiar-tt"><i class="bi bi-clipboard"></i> Copiar</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="panel-caja p-0">
+        <div class="table-responsive">
+            <table class="table align-middle tabla-vic mb-0">
+                <thead><tr><th style="width:44px"><span class="visually-hidden">Elegir</span></th><th>Perro</th><th>Instagram</th><th>TikTok</th><th></th></tr></thead>
+                <tbody>
+                @foreach (var c in Model)
+                {
+                    var ig = Ayudas.EnlaceRed(c.Instagram, "instagram");
+                    var tt = Ayudas.EnlaceRed(c.TikTok, "tiktok");
+                    <tr>
+                        <td>
+                            <input type="checkbox" class="form-check-input elegir" aria-label="Elegir a @c.Nombre"
+                                   data-ig="@Ayudas.Etiqueta(c.Instagram)" data-tt="@Ayudas.Etiqueta(c.TikTok)" />
+                        </td>
+                        <td>
+                            <a asp-controller="Caninos" asp-action="Details" asp-route-id="@c.Id" class="perro-mini">
+                                <img src="@c.FotoOPlaceholder" alt="" /> <span>@c.Nombre</span>
+                            </a>
+                        </td>
+                        <td>
+                            @if (ig != null)
+                            {
+                                <a href="@ig" target="_blank" rel="noopener" class="enlace-suave fw-bold">@Ayudas.Etiqueta(c.Instagram)</a>
+                                <button type="button" class="btn btn-sm btn-link text-dark" data-copiar="@Ayudas.Etiqueta(c.Instagram)" aria-label="Copiar etiqueta de Instagram de @c.Nombre"><i class="bi bi-clipboard"></i></button>
+                            }
+                            else { <span class="text-muted">—</span> }
+                        </td>
+                        <td>
+                            @if (tt != null)
+                            {
+                                <a href="@tt" target="_blank" rel="noopener" class="enlace-suave fw-bold">@Ayudas.Etiqueta(c.TikTok)</a>
+                                <button type="button" class="btn btn-sm btn-link text-dark" data-copiar="@Ayudas.Etiqueta(c.TikTok)" aria-label="Copiar etiqueta de TikTok de @c.Nombre"><i class="bi bi-clipboard"></i></button>
+                            }
+                            else { <span class="text-muted">—</span> }
+                        </td>
+                        <td class="text-end"><a asp-controller="Caninos" asp-action="Edit" asp-route-id="@c.Id" class="btn btn-sm btn-outline-dark">Editar</a></td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+
+@section Scripts {
+<script>
+    (function () {
+        var cajas = document.querySelectorAll('.elegir');
+        if (!cajas.length) return;
+        var ig = document.getElementById('tags-ig'), tt = document.getElementById('tags-tt');
+        function actualizar() {
+            var a = [], b = [];
+            cajas.forEach(function (c) {
+                if (!c.checked) return;
+                if (c.dataset.ig) a.push(c.dataset.ig);
+                if (c.dataset.tt) b.push(c.dataset.tt);
+            });
+            ig.value = a.join(' ');
+            tt.value = b.join(' ');
+            document.getElementById('copiar-ig').setAttribute('data-copiar', ig.value);
+            document.getElementById('copiar-tt').setAttribute('data-copiar', tt.value);
+        }
+        cajas.forEach(function (c) { c.addEventListener('change', actualizar); });
+        document.getElementById('marcar-todos').addEventListener('click', function () { cajas.forEach(function (c) { c.checked = true; }); actualizar(); });
+        document.getElementById('desmarcar').addEventListener('click', function () { cajas.forEach(function (c) { c.checked = false; }); actualizar(); });
+        actualizar();
+    })();
+</script>
+}

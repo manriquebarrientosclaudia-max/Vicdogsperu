@@ -1,0 +1,153 @@
+@model DashboardVM
+@{
+    ViewData["Title"] = "Panel";
+    var maxServ = Model.PorServicio.Any() ? Model.PorServicio.Max(x => x.Cantidad) : 1;
+    var maxDist = Model.PorDistrito.Any() ? Model.PorDistrito.Max(x => x.Cantidad) : 1;
+}
+<div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
+    <div>
+        <h1 class="titulo">Panel</h1>
+        <p class="text-muted mb-0">@Model.TotalActivos perros activos y @Model.TotalTutores tutores registrados.</p>
+    </div>
+    <a asp-controller="Caninos" asp-action="Create" class="btn btn-azul"><i class="bi bi-plus-lg"></i> Nuevo perro</a>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-8">
+        <section class="panel-caja mb-4">
+            <div class="d-flex justify-content-between align-items-center">
+                <h2 class="titulo h4 mb-0">Fechas que no debes olvidar</h2>
+                <a asp-controller="Recordatorios" asp-action="Index" class="enlace-suave">Ver todos</a>
+            </div>
+            @if (!Model.Recordatorios.Any())
+            {
+                <p class="vacio mt-3 mb-0">No tienes nada pendiente por ahora. Los avisos aparecen aquí desde el día que elijas antes de cada fecha.</p>
+            }
+            else
+            {
+                <ul class="lista-recordatorios">
+                @foreach (var a in Model.Recordatorios)
+                {
+                    <li class="@(a.Dias < 0 ? "pendiente" : a.Dias == 0 ? "hoy" : "")">
+                        <div class="rec-fecha"><span>@a.Fecha.Day</span><small>@a.Fecha.MesCorto()</small></div>
+                        <div class="rec-texto">
+                            <strong>@a.Recordatorio.Titulo</strong>
+                            <div class="small">
+                                @if (a.Dias < 0) { <span>Era el @a.Fecha.Fecha(): sigue pendiente</span> }
+                                else if (a.Dias == 0) { <span>Es hoy</span> }
+                                else if (a.Dias == 1) { <span>Es mañana</span> }
+                                else { <span>Es en @a.Dias días</span> }
+                                @if (!string.IsNullOrEmpty(a.Recordatorio.Notas)) { <span> · @a.Recordatorio.Notas</span> }
+                            </div>
+                        </div>
+                        <form asp-controller="Recordatorios" asp-action="Hecho" method="post">
+                            <input type="hidden" name="id" value="@a.Recordatorio.Id" />
+                            <input type="hidden" name="fecha" value="@a.Fecha.ToString("yyyy-MM-dd")" />
+                            <input type="hidden" name="volver" value="panel" />
+                            <button type="submit" class="btn btn-sm btn-azul"><i class="bi bi-check-lg"></i> Hecho</button>
+                        </form>
+                    </li>
+                }
+                </ul>
+            }
+        </section>
+
+        <section class="panel-caja mb-4">
+            <h2 class="titulo h4 mb-0">Cumpleaños de los próximos 14 días</h2>
+            @if (!Model.Cumpleanos.Any())
+            {
+                <p class="vacio mt-3 mb-0">No hay cumpleaños cerca. Registra el cumpleaños de cada tutor en su ficha para que aparezca aquí.</p>
+            }
+            else
+            {
+                <ul class="lista-recordatorios">
+                @foreach (var c in Model.Cumpleanos)
+                {
+                    <li class="@(c.Dias == 0 ? "hoy" : "")">
+                        <div class="rec-fecha"><span>@c.Fecha.Day</span><small>@c.Fecha.MesCorto()</small></div>
+                        <div class="rec-texto">
+                            <strong>
+                                @if (c.EsPerro) { <a asp-controller="Caninos" asp-action="Details" asp-route-id="@c.Id" class="enlace-negro"><i class="bi bi-balloon-heart-fill"></i> @c.Nombre</a> }
+                                else { <a asp-controller="Tutores" asp-action="Details" asp-route-id="@c.Id" class="enlace-negro"><i class="bi bi-cake2-fill"></i> @c.Nombre</a> }
+                            </strong>
+                            <div class="small">
+                                @(c.Dias == 0 ? "Cumple años hoy" : c.Dias == 1 ? "Cumple años mañana" : "Cumple años en " + c.Dias + " días")
+                                <span class="text-muted"> · @c.Detalle</span>
+                            </div>
+                        </div>
+                    </li>
+                }
+                </ul>
+            }
+        </section>
+
+        <section class="panel-caja">
+            <h2 class="titulo h4">Salud que requiere atención</h2>
+            <p class="text-muted small">Vacunas vencidas o que vencen en 30 días, y desparasitaciones que se repiten cada 3 meses.</p>
+            @if (!Model.Alertas.Any())
+            {
+                <p class="vacio">No hay vacunas ni desparasitaciones por vencer en los próximos 30 días.</p>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table align-middle tabla-vic">
+                        <thead><tr><th>Perro</th><th>Qué toca</th><th>Fecha</th><th>Estado</th></tr></thead>
+                        <tbody>
+                        @foreach (var a in Model.Alertas)
+                        {
+                            <tr>
+                                <td>
+                                    <a asp-controller="Caninos" asp-action="Details" asp-route-id="@a.Canino.Id" class="perro-mini">
+                                        <img src="@a.Canino.FotoOPlaceholder" alt="" /> <span>@a.Canino.Nombre</span>
+                                    </a>
+                                </td>
+                                <td>@a.Detalle</td>
+                                <td>@a.Fecha.Fecha()</td>
+                                <td>
+                                    @if (a.Dias < 0) { <span class="chip chip-negro">Vencida hace @(-a.Dias) días</span> }
+                                    else if (a.Dias == 0) { <span class="chip chip-azul">Vence hoy</span> }
+                                    else { <span class="chip chip-azul">En @a.Dias días</span> }
+                                </td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </section>
+    </div>
+
+    <div class="col-lg-4">
+        <section class="panel-caja mb-4">
+            <h2 class="titulo h5">Perros por servicio</h2>
+            @foreach (var s in Model.PorServicio)
+            {
+                <div class="barra-fila">
+                    <div class="d-flex justify-content-between"><span>@s.Servicio</span><strong>@s.Cantidad</strong></div>
+                    <div class="barra"><span style="width:@((int)(100.0 * s.Cantidad / maxServ))%"></span></div>
+                </div>
+            }
+        </section>
+
+        <section class="panel-caja mb-4">
+            <h2 class="titulo h5">Datos por completar</h2>
+            <ul class="lista-simple">
+                <li><strong>@Model.SinTutor</strong> perros sin tutor</li>
+                <li><strong>@Model.SinPeso</strong> perros sin peso</li>
+                <li><strong>@Model.SinFechaVacuna</strong> perros sin fecha de vacuna</li>
+            </ul>
+        </section>
+
+        <section class="panel-caja">
+            <h2 class="titulo h5">Perros por distrito</h2>
+            @foreach (var d in Model.PorDistrito)
+            {
+                <div class="barra-fila">
+                    <div class="d-flex justify-content-between"><a asp-controller="Caninos" asp-action="Index" asp-route-distrito="@d.Distrito" class="enlace-suave">@d.Distrito</a><strong>@d.Cantidad</strong></div>
+                    <div class="barra"><span style="width:@((int)(100.0 * d.Cantidad / maxDist))%"></span></div>
+                </div>
+            }
+        </section>
+    </div>
+</div>

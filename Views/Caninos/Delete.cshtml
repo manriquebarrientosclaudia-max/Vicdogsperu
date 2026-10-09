@@ -1,0 +1,15 @@
+@model Canino
+@{ ViewData["Title"] = "Eliminar a " + Model.Nombre; }
+<div class="panel-caja mx-auto text-center" style="max-width:520px">
+    <img src="@Model.FotoOPlaceholder" alt="Foto de @Model.Nombre" class="foto-form mb-3" style="max-width:220px" />
+    <h1 class="titulo h3">¿Eliminar a @Model.Nombre?</h1>
+    <p class="text-muted">Se borrarán su ficha, su foto y todo su historial de vacunas, antipulgas y desparasitaciones. Esta acción no se puede deshacer.
+        Si solo dejó de usar el servicio, es mejor marcarlo como inactivo.</p>
+    <div class="d-flex flex-wrap justify-content-center gap-2">
+        <form asp-action="Delete" asp-route-id="@Model.Id" method="post">
+            <button type="submit" class="btn btn-dark">Sí, eliminar definitivamente</button>
+        </form>
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-dark">Mejor desactivarlo</a>
+        <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-azul">Cancelar</a>
+    </div>
+</div>

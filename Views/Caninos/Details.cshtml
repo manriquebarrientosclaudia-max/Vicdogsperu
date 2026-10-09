@@ -1,0 +1,341 @@
+@using System.Globalization
+@model Canino
+@{
+    ViewData["Title"] = Model.Nombre;
+    var est = Model.EstadoVacunas();
+    var tiposVacuna = new[] { "Séxtuple", "Leptospira", "KC", "Otra" };
+}
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+    <a asp-action="Index" class="enlace-suave"><i class="bi bi-arrow-left"></i> Volver a caninos</a>
+    <div class="d-flex gap-2">
+        <a asp-action="FichaWord" asp-route-id="@Model.Id" class="btn btn-outline-dark"><i class="bi bi-file-earmark-word"></i> Descargar ficha (Word)</a>
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-azul"><i class="bi bi-pencil-fill"></i> Editar datos</a>
+        <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-outline-dark"><i class="bi bi-trash"></i> Eliminar</a>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-4 col-lg-3">
+        <div class="tarjeta-perro grande @(Model.Activo ? "" : "inactivo")">
+            <div class="foto"><img src="@Model.FotoOPlaceholder" alt="Foto de @Model.Nombre" /></div>
+            <div class="placa">@Model.Nombre</div>
+        </div>
+        <div class="mt-3 d-flex flex-wrap gap-2">
+            <span class="chip @est.Clase">@est.Texto</span>
+            @if (!Model.Activo) { <span class="chip chip-negro">Inactivo</span> }
+        </div>
+    </div>
+
+    <div class="col-md-8 col-lg-9">
+        <section class="panel-caja mb-4">
+            <h2 class="titulo h4">Datos del perro</h2>
+            <dl class="ficha">
+                <div><dt>Servicio</dt><dd>@(Model.Servicio?.Nombre)</dd></div>
+                <div><dt>Distrito</dt><dd>@(string.IsNullOrEmpty(Model.Distrito) ? "—" : Model.Distrito)</dd></div>
+                <div><dt>Sexo</dt><dd>@Model.Sexo</dd></div>
+                <div><dt>Edad</dt><dd>@(string.IsNullOrEmpty(Model.EdadTexto) ? "—" : Model.EdadTexto)</dd></div>
+                <div><dt>Fecha de nacimiento</dt><dd>@Model.FechaNacimiento.Fecha()</dd></div>
+                <div><dt>Raza o cruce</dt><dd>@(string.IsNullOrEmpty(Model.Raza) ? "—" : Model.Raza)</dd></div>
+                <div><dt>Peso referencial</dt><dd>@(Model.PesoKg.HasValue ? Model.PesoKg.Value.ToString("0.##") + " kg" : "—")</dd></div>
+                <div><dt>Tipo de baño</dt><dd>@(string.IsNullOrEmpty(Model.TipoBano) ? "—" : "Baño " + Model.TipoBano.ToLower())</dd></div>
+                <div><dt>Alimentación</dt><dd>@(string.IsNullOrEmpty(Model.AlimentacionTipo) ? "—" : Model.AlimentacionTipo)@(string.IsNullOrEmpty(Model.AlimentacionMarca) ? "" : " · " + Model.AlimentacionMarca)</dd></div>
+                <div><dt>Tipo de agua</dt><dd>@(string.IsNullOrEmpty(Model.TipoAgua) ? "—" : Model.TipoAgua)</dd></div>
+                <div><dt>Hospedaje</dt><dd>@(Model.HospedajeTexto ?? "—")</dd></div>
+                <div><dt>@Model.EtiquetaFechaRegistro</dt><dd>@Model.FechaRegistro.Fecha()</dd></div>
+            </dl>
+            @if (!string.IsNullOrEmpty(Model.Observaciones))
+            {
+                <div class="nota"><strong>Observaciones:</strong> @Model.Observaciones</div>
+            }
+        </section>
+
+        <section class="panel-caja mb-4">
+            <h2 class="titulo h4">@(Model.Tutores.Count == 1 ? "Tutor" : "Tutores")</h2>
+            @if (!string.IsNullOrEmpty(Model.Distrito))
+            {
+                <p class="small text-muted mb-2"><i class="bi bi-geo-alt-fill"></i> Zona del perro: <strong>@Model.Distrito</strong></p>
+            }
+            @if (!Model.Tutores.Any())
+            {
+                <p class="vacio mb-0">Este perro no tiene tutor registrado. Usa «Editar datos» para asignarle uno.</p>
+            }
+            else
+            {
+                var contactos = Model.Tutores.Select(ct => ct.Tutor).OrderBy(tt => tt.Nombre).ToList();
+                <partial name="_ContactoTutores" model="contactos" />
+            }
+        </section>
+
+        <section class="panel-caja mb-4">
+            <h2 class="titulo h4">Redes sociales</h2>
+            @{
+                var enlaceIg = Ayudas.EnlaceRed(Model.Instagram, "instagram");
+                var enlaceTt = Ayudas.EnlaceRed(Model.TikTok, "tiktok");
+            }
+            @if (enlaceIg == null && enlaceTt == null)
+            {
+                <p class="vacio mb-0">Todavía no tiene redes. Agrégalas en «Editar datos» para tenerlas a la mano y etiquetarlo en tus videos.</p>
+            }
+            else
+            {
+                <div class="redes-lista">
+                    @if (enlaceIg != null)
+                    {
+                        <div class="red-fila">
+                            <span class="red-icono"><i class="bi bi-instagram"></i></span>
+                            <div class="red-usuario"><small class="text-muted">Instagram</small><strong>@Ayudas.Etiqueta(Model.Instagram)</strong></div>
+                            <a href="@enlaceIg" target="_blank" rel="noopener" class="btn btn-sm btn-azul">Abrir</a>
+                            <button type="button" class="btn btn-sm btn-outline-dark" data-copiar="@Ayudas.Etiqueta(Model.Instagram)"><i class="bi bi-clipboard"></i> Copiar</button>
+                        </div>
+                    }
+                    @if (enlaceTt != null)
+                    {
+                        <div class="red-fila">
+                            <span class="red-icono"><i class="bi bi-tiktok"></i></span>
+                            <div class="red-usuario"><small class="text-muted">TikTok</small><strong>@Ayudas.Etiqueta(Model.TikTok)</strong></div>
+                            <a href="@enlaceTt" target="_blank" rel="noopener" class="btn btn-sm btn-azul">Abrir</a>
+                            <button type="button" class="btn btn-sm btn-outline-dark" data-copiar="@Ayudas.Etiqueta(Model.TikTok)"><i class="bi bi-clipboard"></i> Copiar</button>
+                        </div>
+                    }
+                </div>
+            }
+        </section>
+
+        @{
+            var pesos = Model.Pesos.OrderBy(p => p.Fecha).ThenBy(p => p.Id).ToList();
+            var inv = CultureInfo.InvariantCulture;
+            string F(double v) => v.ToString("0.#", inv);
+            string Kg(decimal v) => v.ToString("0.##", inv);
+        }
+        <section class="panel-caja mb-4">
+            <h2 class="titulo h4">Control de peso</h2>
+            @if (!pesos.Any())
+            {
+                <p class="vacio">Todavía no hay pesos registrados. Registra el primero para empezar a ver si su peso cambia.</p>
+            }
+            else
+            {
+                var primero = pesos.First();
+                var ultimo = pesos.Last();
+                var delta = ultimo.PesoKg - primero.PesoKg;
+                var pct = primero.PesoKg > 0 ? (double)(delta / primero.PesoKg) * 100 : 0;
+                <div class="resumen-peso">
+                    <div>
+                        <span class="dato-grande">@Kg(ultimo.PesoKg) kg</span>
+                        <small class="text-muted d-block">Último peso · @ultimo.Fecha.Fecha()</small>
+                    </div>
+                    <div>
+                        @if (pesos.Count < 2)
+                        {
+                            <small class="text-muted">Con un segundo registro verás si su peso cambia.</small>
+                        }
+                        else if (Math.Abs(pct) < 5)
+                        {
+                            <span class="chip estado-ok">Peso estable</span>
+                            <small class="text-muted d-block">Cambió menos del 5 % desde el @primero.Fecha.Fecha()</small>
+                        }
+                        else if (delta > 0)
+                        {
+                            <span class="chip chip-azul">Subió @Kg(delta) kg (@F(pct) %)</span>
+                            <small class="text-muted d-block">Desde el @primero.Fecha.Fecha()</small>
+                        }
+                        else
+                        {
+                            <span class="chip chip-negro">Bajó @Kg(-delta) kg (@F(-pct) %)</span>
+                            <small class="text-muted d-block">Desde el @primero.Fecha.Fecha()</small>
+                        }
+                    </div>
+                </div>
+
+                if (pesos.Count >= 2)
+                {
+                    const int W = 640, H = 210, L = 46, R = 18, Tp = 22, B = 36;
+                    var min = ultimo.PesoKg; var max = ultimo.PesoKg;
+                    foreach (var q in pesos) { if (q.PesoKg < min) min = q.PesoKg; if (q.PesoKg > max) max = q.PesoKg; }
+                    if (max - min < 0.5m) { var mitad = (max + min) / 2; min = mitad - 0.5m; max = mitad + 0.5m; }
+                    else { var margen = (max - min) * 0.2m; min -= margen; max += margen; }
+                    var t0 = primero.Fecha;
+                    var dias = (ultimo.Fecha - t0).TotalDays; if (dias < 1) dias = 1;
+                    double X(PesoRegistro q) => L + (q.Fecha - t0).TotalDays / dias * (W - L - R);
+                    double Y(PesoRegistro q) => Tp + (double)((max - q.PesoKg) / (max - min)) * (H - Tp - B);
+                    var puntos = string.Join(" ", pesos.Select(q => F(X(q)) + "," + F(Y(q))));
+                    var etiquetas = pesos.Count <= 10;
+                    <div class="grafico-peso">
+                        <svg viewBox="0 0 @W @H" role="img" aria-label="Evolución del peso de @Model.Nombre">
+                            <line class="eje" x1="@L" y1="@Tp" x2="@(W - R)" y2="@Tp" />
+                            <line class="eje" x1="@L" y1="@(H - B)" x2="@(W - R)" y2="@(H - B)" />
+                            <text class="etq" x="@(L - 6)" y="@(Tp + 4)" text-anchor="end">@F((double)max)</text>
+                            <text class="etq" x="@(L - 6)" y="@(H - B + 4)" text-anchor="end">@F((double)min)</text>
+                            <text class="etq" x="@L" y="@(H - 10)" text-anchor="start">@primero.Fecha.Fecha()</text>
+                            <text class="etq" x="@(W - R)" y="@(H - 10)" text-anchor="end">@ultimo.Fecha.Fecha()</text>
+                            <polyline class="linea" points="@puntos" />
+                            @foreach (var q in pesos)
+                            {
+                                <g>
+                                    <circle class="punto" cx="@F(X(q))" cy="@F(Y(q))" r="4.5"><title>@q.Fecha.Fecha(): @Kg(q.PesoKg) kg</title></circle>
+                                    <text class="valor @(etiquetas ? "" : "oculto")" x="@F(X(q))" y="@F(Y(q) - 10)" text-anchor="middle">@Kg(q.PesoKg)</text>
+                                </g>
+                            }
+                        </svg>
+                    </div>
+                }
+
+                <div class="table-responsive">
+                    <table class="table align-middle tabla-vic">
+                        <thead><tr><th>Fecha</th><th>Peso</th><th>Cambio</th><th>Nota</th><th></th></tr></thead>
+                        <tbody>
+                        @for (int i = pesos.Count - 1; i >= 0; i--)
+                        {
+                            var q = pesos[i];
+                            decimal? cambio = i > 0 ? q.PesoKg - pesos[i - 1].PesoKg : (decimal?)null;
+                            <tr>
+                                <td>@q.Fecha.Fecha()</td>
+                                <td class="fw-bold">@Kg(q.PesoKg) kg</td>
+                                <td>
+                                    @if (cambio == null) { <span class="text-muted">—</span> }
+                                    else if (cambio == 0) { <span class="text-muted">Sin cambio</span> }
+                                    else if (cambio > 0) { <span class="cambio-sube"><i class="bi bi-arrow-up"></i> +@Kg(cambio.Value) kg</span> }
+                                    else { <span class="cambio-baja"><i class="bi bi-arrow-down"></i> @Kg(cambio.Value) kg</span> }
+                                </td>
+                                <td class="small text-muted">@q.Nota</td>
+                                <td class="text-end">
+                                    <form asp-action="QuitarPeso" method="post" onsubmit="return confirm('¿Quitar este registro de peso?');">
+                                        <input type="hidden" name="id" value="@q.Id" /><input type="hidden" name="caninoId" value="@Model.Id" />
+                                        <button class="btn btn-sm btn-link text-dark" title="Quitar" aria-label="Quitar peso"><i class="bi bi-x-lg"></i></button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            <details class="agregar">
+                <summary><i class="bi bi-plus-circle"></i> Registrar peso</summary>
+                <form asp-action="AgregarPeso" method="post" class="row g-2 mt-1">
+                    <input type="hidden" name="caninoId" value="@Model.Id" />
+                    <div class="col-md-3"><label class="form-label" for="p-f">Fecha</label><input type="date" class="form-control" id="p-f" name="fecha" value="@DateTime.Today.ToString("yyyy-MM-dd")" required /></div>
+                    <div class="col-md-3"><label class="form-label" for="p-k">Peso (kg)</label><input type="number" step="0.01" min="0.1" max="200" class="form-control" id="p-k" name="pesoKg" required /></div>
+                    <div class="col-md-6"><label class="form-label" for="p-n">Nota (opcional)</label><input class="form-control" id="p-n" name="nota" maxlength="200" placeholder="Ej. pesado en la veterinaria" /></div>
+                    <div class="col-12"><button class="btn btn-azul btn-sm" type="submit">Guardar peso</button></div>
+                </form>
+            </details>
+        </section>
+
+        <section class="panel-caja mb-4">
+            <h2 class="titulo h4">Vacunas</h2>
+            @if (!Model.Vacunas.Any()) { <p class="vacio">Todavía no hay vacunas registradas.</p> }
+            else
+            {
+                <div class="table-responsive">
+                <table class="table align-middle tabla-vic">
+                    <thead><tr><th>Vacuna</th><th>Aplicada</th><th>Próxima</th><th>Nota</th><th></th></tr></thead>
+                    <tbody>
+                    @foreach (var v in Model.Vacunas.OrderBy(x => x.Tipo).ThenByDescending(x => x.FechaAplicada))
+                    {
+                        var dias = v.Vencimiento.HasValue ? (v.Vencimiento.Value.Date - DateTime.Today).Days : (int?)null;
+                        <tr>
+                            <td class="fw-bold">@v.Tipo</td>
+                            <td>@v.FechaAplicada.Fecha()</td>
+                            <td>
+                                @v.Vencimiento.Fecha()
+                                @if (dias.HasValue && dias < 0) { <span class="chip chip-negro">Vencida</span> }
+                                else if (dias.HasValue && dias <= 30) { <span class="chip chip-azul">Pronto</span> }
+                            </td>
+                            <td class="small text-muted">@v.Observacion</td>
+                            <td class="text-end">
+                                <form asp-action="QuitarVacuna" method="post" onsubmit="return confirm('¿Quitar este registro de vacuna?');">
+                                    <input type="hidden" name="id" value="@v.Id" /><input type="hidden" name="caninoId" value="@Model.Id" />
+                                    <button class="btn btn-sm btn-link text-dark" title="Quitar" aria-label="Quitar vacuna"><i class="bi bi-x-lg"></i></button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+                </div>
+                <p class="small text-muted">Si una vacuna no tiene «Próxima», se calcula desde la fecha aplicada: Séxtuple a los 12 meses; Leptospira y KC a los 6 meses.</p>
+            }
+            <details class="agregar">
+                <summary><i class="bi bi-plus-circle"></i> Registrar vacuna</summary>
+                <form asp-action="AgregarVacuna" method="post" class="row g-2 mt-1">
+                    <input type="hidden" name="caninoId" value="@Model.Id" />
+                    <div class="col-md-3"><label class="form-label" for="v-tipo">Vacuna</label>
+                        <select class="form-select" id="v-tipo" name="tipo">@foreach (var t in tiposVacuna) { <option>@t</option> }</select></div>
+                    <div class="col-md-3"><label class="form-label" for="v-ap">Fecha aplicada</label><input type="date" class="form-control" id="v-ap" name="fechaAplicada" /></div>
+                    <div class="col-md-3"><label class="form-label" for="v-pr">Próxima fecha</label><input type="date" class="form-control" id="v-pr" name="fechaProxima" /></div>
+                    <div class="col-md-3"><label class="form-label" for="v-ob">Nota</label><input class="form-control" id="v-ob" name="observacion" maxlength="300" /></div>
+                    <div class="col-12"><button class="btn btn-azul btn-sm" type="submit">Guardar vacuna</button></div>
+                </form>
+            </details>
+        </section>
+
+        <div class="row g-4">
+            <div class="col-lg-6">
+                <section class="panel-caja h-100">
+                    <h2 class="titulo h4">Antipulgas</h2>
+                    @if (!Model.Antipulgas.Any()) { <p class="vacio">Sin registros.</p> }
+                    else
+                    {
+                        <table class="table align-middle tabla-vic">
+                            <thead><tr><th>Fecha</th><th>Marca</th><th>Duración</th><th>Próxima</th><th></th></tr></thead>
+                            <tbody>
+                            @foreach (var a in Model.Antipulgas.OrderByDescending(x => x.Fecha))
+                            {
+                                <tr><td>@a.Fecha.Fecha()</td><td>@(string.IsNullOrEmpty(a.Marca) ? "—" : a.Marca)</td>
+                                    <td>@(a.Meses.HasValue ? a.Meses + (a.Meses == 1 ? " mes" : " meses") : "—")</td>
+                                    <td>@a.Proxima.Fecha()</td>
+                                    <td class="text-end"><form asp-action="QuitarAntipulga" method="post" onsubmit="return confirm('¿Quitar este registro?');">
+                                        <input type="hidden" name="id" value="@a.Id" /><input type="hidden" name="caninoId" value="@Model.Id" />
+                                        <button class="btn btn-sm btn-link text-dark" aria-label="Quitar antipulgas"><i class="bi bi-x-lg"></i></button></form></td></tr>
+                            }
+                            </tbody>
+                        </table>
+                    }
+                    <details class="agregar">
+                        <summary><i class="bi bi-plus-circle"></i> Registrar antipulgas</summary>
+                        <form asp-action="AgregarAntipulga" method="post" class="row g-2 mt-1">
+                            <input type="hidden" name="caninoId" value="@Model.Id" />
+                            <div class="col-12 col-md-4"><label class="form-label" for="a-f">Fecha</label><input type="date" class="form-control" id="a-f" name="fecha" /></div>
+                            <div class="col-12 col-md-4"><label class="form-label" for="a-m">Marca</label><input class="form-control" id="a-m" name="marca" placeholder="Nexgard, Bravecto…" maxlength="80" /></div>
+                            <div class="col-12 col-md-4"><label class="form-label" for="a-d">Dura</label>
+                                <select class="form-select" id="a-d" name="meses"><option value="">—</option><option value="1">1 mes</option><option value="3">3 meses</option></select></div>
+                            <div class="col-12"><button class="btn btn-azul btn-sm" type="submit">Guardar antipulgas</button></div>
+                        </form>
+                    </details>
+                </section>
+            </div>
+            <div class="col-lg-6">
+                <section class="panel-caja h-100">
+                    <h2 class="titulo h4">Desparasitación</h2>
+                    @if (!Model.Desparasitaciones.Any()) { <p class="vacio">Sin registros.</p> }
+                    else
+                    {
+                        <table class="table align-middle tabla-vic">
+                            <thead><tr><th>Fecha</th><th>Marca</th><th>Próxima</th><th></th></tr></thead>
+                            <tbody>
+                            @foreach (var d in Model.Desparasitaciones.OrderByDescending(x => x.Fecha))
+                            {
+                                <tr><td>@d.Fecha.Fecha()</td><td>@(string.IsNullOrEmpty(d.Producto) ? "—" : d.Producto)</td>
+                                    <td>@d.Proxima.Fecha()</td>
+                                    <td class="text-end"><form asp-action="QuitarDesparasitacion" method="post" onsubmit="return confirm('¿Quitar este registro?');">
+                                        <input type="hidden" name="id" value="@d.Id" /><input type="hidden" name="caninoId" value="@Model.Id" />
+                                        <button class="btn btn-sm btn-link text-dark" aria-label="Quitar desparasitación"><i class="bi bi-x-lg"></i></button></form></td></tr>
+                            }
+                            </tbody>
+                        </table>
+                    }
+                    <details class="agregar">
+                        <summary><i class="bi bi-plus-circle"></i> Registrar desparasitación</summary>
+                        <form asp-action="AgregarDesparasitacion" method="post" class="row g-2 mt-1">
+                            <input type="hidden" name="caninoId" value="@Model.Id" />
+                            <div class="col-6"><label class="form-label" for="d-f">Fecha</label><input type="date" class="form-control" id="d-f" name="fecha" required /></div>
+                            <div class="col-6"><label class="form-label" for="d-p">Marca</label><input class="form-control" id="d-p" name="producto" maxlength="80" /></div>
+                            <div class="col-12"><button class="btn btn-azul btn-sm" type="submit">Guardar desparasitación</button></div>
+                        </form>
+                    </details>
+                </section>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,57 @@
+@model List<Recordatorio>
+@{
+    ViewData["Title"] = "Recordatorios";
+    var hoy = DateTime.Today;
+}
+<div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-3">
+    <div>
+        <h1 class="titulo">Recordatorios</h1>
+        <p class="text-muted mb-0">Fechas que no debes olvidar. Aparecen en el panel desde el día que elijas antes.</p>
+    </div>
+    <a asp-action="Create" class="btn btn-azul"><i class="bi bi-plus-lg"></i> Nuevo recordatorio</a>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="panel-caja vacio">Todavía no hay recordatorios. Crea el primero, por ejemplo «Pagar el internet» cada mes.</div>
+}
+else
+{
+    <div class="panel-caja p-0">
+        <div class="table-responsive">
+            <table class="table align-middle tabla-vic mb-0">
+                <thead><tr><th>Recordatorio</th><th>Cuándo</th><th>Próxima fecha</th><th>Aviso</th><th></th></tr></thead>
+                <tbody>
+                @foreach (var r in Model)
+                {
+                    var prox = r.Proxima(hoy);
+                    var hecho = prox.HasValue && r.HechoFecha.HasValue && r.HechoFecha.Value.Date == prox.Value;
+                    <tr class="@(r.Activo ? "" : "text-muted")">
+                        <td>
+                            <strong>@r.Titulo</strong>
+                            @if (!r.Activo) { <span class="chip chip-negro">Pausado</span> }
+                            @if (!string.IsNullOrEmpty(r.Notas)) { <div class="small text-muted">@r.Notas</div> }
+                        </td>
+                        <td>@r.Cuando</td>
+                        <td>
+                            @if (prox.HasValue)
+                            {
+                                @prox.Value.Fecha()
+                                @if (hecho) { <span class="chip estado-ok">Hecho</span> }
+                            }
+                            else { <span class="text-muted">Ya pasó</span> }
+                        </td>
+                        <td>@(r.AvisarDiasAntes == 0 ? "El mismo día" : r.AvisarDiasAntes == 1 ? "1 día antes" : r.AvisarDiasAntes + " días antes")</td>
+                        <td class="text-end text-nowrap">
+                            <a asp-action="Edit" asp-route-id="@r.Id" class="btn btn-sm btn-outline-dark">Editar</a>
+                            <form asp-action="Delete" asp-route-id="@r.Id" method="post" class="d-inline" onsubmit="return confirm('¿Eliminar este recordatorio?');">
+                                <button type="submit" class="btn btn-sm btn-link text-dark" aria-label="Eliminar @r.Titulo"><i class="bi bi-trash"></i></button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}

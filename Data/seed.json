@@ -1,0 +1,1450 @@
+{
+ "servicios": [
+  "Guardería Educativa",
+  "Hogar Recreativo",
+  "Internamiento de Rehabilitación",
+  "Hospedaje Exclusivo",
+  "Hospedaje Frecuente",
+  "Perros de la Casa"
+ ],
+ "caninos": [
+  {
+   "nombre": "Iggy",
+   "sexo": "Macho",
+   "edad": "2 años",
+   "raza": "Cruce de Labrador grande",
+   "servicio": "Guardería Educativa",
+   "distrito": "San Miguel",
+   "tutores": [
+    "Alfredo Araujo"
+   ],
+   "foto": "iggy.jpg",
+   "bano": "Normal",
+   "alimTipo": "Galletas y comida casera",
+   "alimMarca": "Cambo",
+   "vacunas": [
+    {
+     "tipo": "Séxtuple"
+    },
+    {
+     "tipo": "Leptospira"
+    },
+    {
+     "tipo": "KC"
+    }
+   ],
+   "desparasitaciones": [],
+   "antipulgas": [],
+   "peso": null,
+   "fechaNacimiento": null,
+   "observaciones": null
+  },
+  {
+   "nombre": "Parche",
+   "sexo": "Macho",
+   "edad": null,
+   "raza": "Pitbull",
+   "servicio": "Guardería Educativa",
+   "distrito": "San Miguel",
+   "tutores": [
+    "Vanessa Plata",
+    "Gabriel Duffaut"
+   ],
+   "foto": "parche.jpg",
+   "bano": "Medicado",
+   "alimTipo": "BARF",
+   "alimMarca": null,
+   "vacunas": [
+    {
+     "tipo": "Séxtuple",
+     "aplicada": "2026-08-06"
+    },
+    {
+     "tipo": "Leptospira",
+     "aplicada": "2026-08-06"
+    },
+    {
+     "tipo": "KC",
+     "aplicada": "2026-08-06"
+    }
+   ],
+   "desparasitaciones": [],
+   "antipulgas": [],
+   "peso": null,
+   "fechaNacimiento": null,
+   "observaciones": null
+  },
+  {
+   "nombre": "Sam",
+   "sexo": "Macho",
+   "edad": "5 años",
+   "raza": "Cruce Golden",
+   "servicio": "Guardería Educativa",
+   "distrito": "San Miguel",
+   "tutores": [
+    "Mirella Polack"
+   ],
+   "foto": "sam.jpg",
+   "bano": "Normal",
+   "alimTipo": "BARF",
+   "alimMarca": null,
+   "vacunas": [
+    {
+     "tipo": "Séxtuple"
+    },
+    {
+     "tipo": "Leptospira"
+    },
+    {
+     "tipo": "KC"
+    }
+   ],
+   "desparasitaciones": [
+    "2026-08-28"
+   ],
+   "antipulgas": [],
+   "peso": null,
+   "fechaNacimiento": null,
+   "observaciones": null
+  },
+  {
+   "nombre": "Mochi",
+   "sexo": "Hembra",
+   "edad": "2 años",
+   "raza": "Cruce Labrador",
+   "servicio": "Guardería Educativa",
+   "distrito": "San Miguel",
+   "tutores": [
+    "Mirella Polack"
+   ],
+   "foto": "mochi.jpg",
+   "bano": "Normal",
+   "alimTipo": "BARF",
+   "alimMarca": null,
+   "vacunas": [
+    {
+     "tipo": "Séxtuple"
+    },
+    {
+     "tipo": "Leptospira"
+    },
+    {
+     "tipo": "KC"
+    }
+   ],
+   "desparasitaciones": [
+    "2026-08-28"
+   ],
+   "antipulgas": [],
+   "peso": null,
+   "fechaNacimiento": null,
+   "observaciones": null
+  },
+  {
+   "nombre": "Lupita",
+   "sexo": "Hembra",
+   "edad": "1 año",
+   "raza": null,
+   "servicio": "Guardería Educativa",
+   "distrito": "San Miguel",
+   "tutores": [
+    "Mirella Polack"
+   ],
+   "foto": "lupita.jpg",
+   "bano": "Normal",
+   "alimTipo": "BARF",
+   "alimMarca": null,
+   "vacunas": [
+    {
+     "tipo": "Séxtuple"
+    },
+    {
+     "tipo": "Leptospira"
+    },
+    {
+     "tipo": "KC"
+    }
+   ],
+   "desparasitaciones": [
+    "2026-08-28"
+   ],
+   "antipulgas": [],
+   "peso": null,
+   "fechaNacimiento": null,
+   "observaciones": null
+  },
+  {
+   "nombre": "Bido",
+   "sexo": "Macho",
+   "edad": "2 años",
+   "raza": "Beagle",
+   "servicio": "Guardería Educativa",
+   "distrito": "San Miguel",
+   "tutores": [
+    "Diana"
+   ],
+   "foto": "bido.jpg",
+   "bano": "Normal",
+   "alimTipo": "Galletas",
+   "alimMarca": null,
+   "vacunas": [
+    {
+     "tipo": "Séxtuple",
+     "aplicada": "2026-02-10"
+    },
+    {
+     "tipo": "Leptospira",
+     "proxima": "2026-10-10"
+    },
+    {
+     "tipo": "KC",
+     "proxima": "2026-10-10"
+    }
+   ],
+   "desparasitaciones": [
+    "2026-08-28"
+   ],
+   "antipulgas": [],
+   "peso": null,
+   "fechaNacimiento": null,
+   "observaciones": null
+  },
+  {
+   "nombre": "Zeus",
+   "sexo": "Macho",
+   "edad": "2 años",
+   "raza": "Beagle",
+   "servicio": "Guardería Educativa",
+   "distrito": "San Miguel",
+   "tutores": [
+    "Diana"
+   ],
+   "foto": "zeus.jpg",
+   "bano": "Normal",
+   "alimTipo": "Galletas",
+   "alimMarca": null,
+   "vacunas": [
+    {
+     "tipo": "Séxtuple",
+     "aplicada": "2026-02-10"
+    },
+    {
+     "tipo": "Leptospira",
+     "proxima": "2026-10-10"
+    },
+    {
+     "tipo": "KC",
+     "proxima": "2026-10-10"
+    }
+   ],
+   "desparasitaciones": [
+    "2026-08-28"
+   ],
+   "antipulgas": [],
+   "peso": null,
+   "fechaNacimiento": null,
+   "observaciones": null
+  },
+  {
+   "nombre": "Blue",
+   "sexo": "Hembra",
+   "edad": "2 años",
+   "raza": "Beagle",
+   "servicio": "Guardería Educativa",
+   "distrito": "San Miguel",
+   "tutores": [
+    "Diana"
+   ],
+   "foto": "blue.jpg",
+   "bano": "Normal",
+   "alimTipo": "Galletas",
+   "alimMarca": null,
+   "vacunas": [
+    {
+     "tipo": "Séxtuple",
+     "aplicada": "2026-02-10"
+    },
+    {
+     "tipo": "Leptospira",
+     "proxima": "2026-10-10"
+    },
+    {
+     "tipo": "KC",
+     "proxima": "2026-10-10"
+    }
+   ],
+   "desparasitaciones": [
+    "2026-08-28"
+   ],
+   "antipulgas": [],
+   "peso": null,
+   "fechaNacimiento": null,
+   "observaciones": null
+  },
+  {
+   "nombre": "Betina",
+   "sexo": "Hembra",
+   "edad": "8 años",
+   "raza": "Basset Hound",
+   "servicio": "Guardería Educativa",
+   "distrito": "San Miguel",
+   "tutores": [
+    "María Paz Quispe"
+   ],
+   "foto": "betina.jpg",
+   "bano": "Normal",
+   "alimTipo": "Galletas",
+   "alimMarca": "Duke",
+   "vacunas": [
+    {
+     "tipo": "Séxtuple"
+    },
+    {
+     "tipo": "Leptospira"
+    },
+    {
+     "tipo": "KC"
+    }
+   ],
+   "desparasitaciones": [
+    "2026-08-28"
+   ],
+   "antipulgas": [],
+   "peso": null,
+   "fechaNacimiento": null,
+   "observaciones": null
+  },
+  {
+   "nombre": "Chuy",
+   "sexo": "Macho",
+   "edad": "2 años",
+   "raza": "Jack Russell",
+   "servicio": "Guardería Educativa",
+   "distrito": "La Punta",
+   "tutores": [
+    "Rosa Gomez"
+   ],
+   "foto": "chuy.jpg",
+   "bano": "Normal",
+   "alimTipo": "Galletas",
+   "alimMarca": "Ricocan",
+   "vacunas": [
+    {
+     "tipo": "Séxtuple"
+    },
+    {
+     "tipo": "Leptospira"
+    },
+    {
+     "tipo": "KC"
+    }
+   ],
+   "desparasitaciones": [
+    "2026-08-28"
+   ],
+   "antipulgas": [],
+   "peso": null,
+   "fechaNacimiento": null,
+   "observaciones": null
+  },
+  {
+   "nombre": "Paco",
+   "sexo": "Macho",
+   "edad": "8 años",
+   "raza": "Husky Siberiano grande",
+   "servicio": "Guardería Educativa",
+   "distrito": "Bellavista",
+   "tutores": [
+    "Joaquin Agurto"
+   ],
+   "foto": "paco.jpg",
+   "bano": "Normal",
+   "alimTipo": null,
+   "alimMarca": null,
+   "vacunas": [
+    {
+     "tipo": "Séxtuple",
+     "aplicada": "2026-09-15"
+    },
+    {
+     "tipo": "Leptospira",
+     "proxima": "2027-03-15"
+    },
+    {
+     "tipo": "KC",
+     "proxima": "2027-03-15"
+    }
+   ],
+   "desparasitaciones": [
+    "2026-08-28"
+   ],
+   "antipulgas": [],
+   "peso": null,
+   "fechaNacimiento": null,
+   "observaciones": null
+  },
+  {
+   "nombre": "Miyuki",
+   "sexo": "Hembra",
+   "edad": null,
+   "raza": "Cruzado mediano (padres perros peruanos)",
+   "servicio": "Guardería Educativa",
+   "distrito": "Pueblo Libre",
+   "tutores": [
+    "Natalia Vasquez"
+   ],
+   "foto": "miyuki.jpg",
+   "bano": "Normal",
+   "alimTipo": "Comida casera",
+   "alimMarca": null,
+   "vacunas": [
+    {
+     "tipo": "Séxtuple"
+    },
+    {
+     "tipo": "Leptospira"
+    },
+    {
+     "tipo": "KC"
+    }
+   ],
+   "desparasitaciones": [
+    "2026-08-28"
+   ],
+   "antipulgas": [],
+   "peso": null,
+   "fechaNacimiento": null,
+   "observaciones": null
+  },
+  {
+   "nombre": "Kai",
+   "sexo": "Macho",
+   "edad": "7 años",
+   "raza": "Collie",
+   "servicio": "Guardería Educativa",
+   "distrito": "Pueblo Libre",
+   "tutores": [
+    "Carla Sosa"
+   ],
+   "foto": "kai.jpg",
+   "bano": "Normal",
+   "alimTipo": "Galletas",
+   "alimMarca": null,
+   "vacunas": [
+    {
+     "tipo": "Séxtuple"
+    },
+    {
+     "tipo": "Leptospira"
+    },
+    {
+     "tipo": "KC"
+    }
+   ],
+   "desparasitaciones": [
+    "2026-08-28"
+   ],
+   "antipulgas": [],
+   "peso": null,
+   "fechaNacimiento": null,
+   "observaciones": null
+  },
+  {
+   "nombre": "Vocka",
+   "sexo": "Macho",
+   "edad": "5 años",
+   "raza": "Beagle",
+   "servicio": "Guardería Educativa",
+   "distrito": "Jesús María",
+   "tutores": [
+    "Victor Castañeda",
+    "Carmen Cardenas"
+   ],
+   "foto": "vocka.jpg",
+   "bano": "Medicado",
+   "alimTipo": "Galletas",
+   "alimMarca": null,
+   "vacunas": [
+    {
+     "tipo": "Séxtuple"
+    },
+    {
+     "tipo": "Leptospira"
+    },
+    {
+     "tipo": "KC"
+    }
+   ],
+   "desparasitaciones": [
+    "2026-08-28"
+   ],
+   "antipulgas": [],
+   "peso": null,
+   "fechaNacimiento": null,
+   "observaciones": null
+  },
+  {
+   "nombre": "Balto",
+   "sexo": "Macho",
+   "edad": "3 años",
+   "raza": "Husky Siberiano",
+   "servicio": "Guardería Educativa",
+   "distrito": "Jesús María",
+   "tutores": [
+    "Jesus Cacha",
+    "Angela Noblejas"
+   ],
+   "foto": "balto.jpg",
+   "bano": "Normal",
+   "alimTipo": "Galletas y comida casera",
+   "alimMarca": null,
+   "vacunas": [
+    {
+     "tipo": "Séxtuple"
+    },
+    {
+     "tipo": "Leptospira"
+    },
+    {
+     "tipo": "KC"
+    }
+   ],
+   "desparasitaciones": [
+    "2026-08-28"
+   ],
+   "antipulgas": [],
+   "peso": null,
+   "fechaNacimiento": null,
+   "observaciones": null
+  },
+  {
+   "nombre": "Puma",
+   "sexo": "Macho",
+   "edad": null,
+   "raza": "Chihuahua",
+   "servicio": "Guardería Educativa",
+   "distrito": "Lince",
+   "tutores": [
+    "Jimmy"
+   ],
+   "foto": "puma.jpg",
+   "bano": "Normal",
+   "alimTipo": "Comida casera",
+   "alimMarca": null,
+   "vacunas": [
+    {
+     "tipo": "Séxtuple"
+    },
+    {
+     "tipo": "Leptospira"
+    },
+    {
+     "tipo": "KC"
+    }
+   ],
+   "desparasitaciones": [
+    "2026-08-28"
+   ],
+   "antipulgas": [],
+   "peso": null,
+   "fechaNacimiento": null,
+   "observaciones": null
+  },
+  {
+   "nombre": "Zeus Chato",
+   "sexo": "Macho",
+   "edad": null,
+   "raza": "Chihuahua",
+   "servicio": "Guardería Educativa",
+   "distrito": "Lince",
+   "tutores": [
+    "Jimmy"
+   ],
+   "foto": "zeus-chato.jpg",
+   "bano": "Normal",
+   "alimTipo": "Comida casera",
+   "alimMarca": null,
+   "vacunas": [
+    {
+     "tipo": "Séxtuple"
+    },
+    {
+     "tipo": "Leptospira"
+    },
+    {
+     "tipo": "KC"
+    }
+   ],
+   "desparasitaciones": [
+    "2026-08-28"
+   ],
+   "antipulgas": [],
+   "peso": null,
+   "fechaNacimiento": null,
+   "observaciones": "Nombre registrado como Zeus. Se le agregó 'Chato' para distinguirlo del Zeus de San Miguel."
+  },
+  {
+   "nombre": "Sofi",
+   "sexo": "Hembra",
+   "edad": "6 meses",
+   "raza": "Shih Tzu",
+   "servicio": "Guardería Educativa",
+   "distrito": "Cercado",
+   "tutores": [
+    "Nicole"
+   ],
+   "foto": "sofi.jpg",
+   "bano": "Normal",
+   "alimTipo": "Comida casera",
+   "alimMarca": null,
+   "vacunas": [
+    {
+     "tipo": "Séxtuple"
+    },
+    {
+     "tipo": "Leptospira"
+    },
+    {
+     "tipo": "KC"
+    }
+   ],
+   "desparasitaciones": [
+    "2026-08-28"
+   ],
+   "antipulgas": [],
+   "peso": null,
+   "fechaNacimiento": null,
+   "observaciones": null
+  },
+  {
+   "nombre": "Yuqui",
+   "sexo": "Hembra",
+   "edad": "2 años",
+   "raza": "Cruce Labrador mediano",
+   "servicio": "Guardería Educativa",
+   "distrito": "San Isidro",
+   "tutores": [
+    "Gloria Naupa"
+   ],
+   "foto": "yuqui.jpg",
+   "bano": "Medicado",
+   "alimTipo": "Galletas y comida casera",
+   "alimMarca": null,
+   "vacunas": [
+    {
+     "tipo": "Séxtuple",
+     "aplicada": "2026-09-23"
+    },
+    {
+     "tipo": "Leptospira",
+     "aplicada": "2026-09-23"
+    },
+    {
+     "tipo": "KC",
+     "aplicada": "2026-09-23"
+    }
+   ],
+   "desparasitaciones": [
+    "2026-08-28"
+   ],
+   "antipulgas": [],
+   "peso": null,
+   "fechaNacimiento": null,
+   "observaciones": null
+  },
+  {
+   "nombre": "Gema",
+   "sexo": "Hembra",
+   "edad": "8 años",
+   "raza": "Siberiano",
+   "servicio": "Guardería Educativa",
+   "distrito": "Chorrillos",
+   "tutores": [
+    "Carlos Corbella"
+   ],
+   "foto": "gema.jpg",
+   "bano": "Medicado",
+   "alimTipo": "Galletas",
+   "alimMarca": null,
+   "vacunas": [
+    {
+     "tipo": "Séxtuple"
+    },
+    {
+     "tipo": "Leptospira"
+    },
+    {
+     "tipo": "KC"
+    }
+   ],
+   "desparasitaciones": [],
+   "antipulgas": [],
+   "peso": null,
+   "fechaNacimiento": null,
+   "observaciones": null
+  },
+  {
+   "nombre": "Renata",
+   "sexo": "Hembra",
+   "edad": "2 años",
+   "raza": "Cruce Pitbull mediano",
+   "servicio": "Guardería Educativa",
+   "distrito": "Chorrillos",
+   "tutores": [
+    "Carlos Corbella"
+   ],
+   "foto": "renata.jpg",
+   "bano": "Medicado",
+   "alimTipo": "Galletas",
+   "alimMarca": null,
+   "vacunas": [
+    {
+     "tipo": "Séxtuple"
+    },
+    {
+     "tipo": "Leptospira"
+    },
+    {
+     "tipo": "KC"
+    }
+   ],
+   "desparasitaciones": [],
+   "antipulgas": [],
+   "peso": null,
+   "fechaNacimiento": null,
+   "observaciones": null
+  },
+  {
+   "nombre": "Nike",
+   "sexo": "Macho",
+   "edad": "3 años",
+   "raza": "Schnauzer pequeño",
+   "servicio": "Guardería Educativa",
+   "distrito": "Miraflores",
+   "tutores": [
+    "Luis Tejada",
+    "Dean Forteza"
+   ],
+   "foto": "nike.jpg",
+   "bano": "Normal",
+   "alimTipo": "Galletas",
+   "alimMarca": null,
+   "vacunas": [
+    {
+     "tipo": "Séxtuple"
+    },
+    {
+     "tipo": "Leptospira"
+    },
+    {
+     "tipo": "KC"
+    }
+   ],
+   "desparasitaciones": [
+    "2026-08-28"
+   ],
+   "antipulgas": [],
+   "peso": null,
+   "fechaNacimiento": null,
+   "observaciones": null
+  },
+  {
+   "nombre": "Malu",
+   "sexo": "Hembra",
+   "edad": "3 años",
+   "raza": "Cruce mediano",
+   "servicio": "Hogar Recreativo",
+   "distrito": "Los Olivos",
+   "tutores": [
+    "Loren Morales"
+   ],
+   "foto": "malu.jpg",
+   "bano": "Normal",
+   "alimTipo": "Galletas y comida casera",
+   "alimMarca": "Cambo",
+   "vacunas": [
+    {
+     "tipo": "Séxtuple"
+    },
+    {
+     "tipo": "Leptospira"
+    },
+    {
+     "tipo": "KC"
+    }
+   ],
+   "desparasitaciones": [
+    "2026-08-28"
+   ],
+   "antipulgas": [],
+   "peso": null,
+   "fechaNacimiento": null,
+   "observaciones": null
+  },
+  {
+   "nombre": "Ceniza",
+   "sexo": "Hembra",
+   "edad": "5 años",
+   "raza": "Cruce mediano",
+   "servicio": "Hogar Recreativo",
+   "distrito": "Los Olivos",
+   "tutores": [
+    "Loren Morales"
+   ],
+   "foto": "ceniza.jpg",
+   "bano": "Normal",
+   "alimTipo": "Galletas y comida casera",
+   "alimMarca": "Cambo",
+   "vacunas": [
+    {
+     "tipo": "Séxtuple"
+    },
+    {
+     "tipo": "Leptospira"
+    },
+    {
+     "tipo": "KC"
+    }
+   ],
+   "desparasitaciones": [
+    "2026-08-28"
+   ],
+   "antipulgas": [],
+   "peso": null,
+   "fechaNacimiento": null,
+   "observaciones": null
+  },
+  {
+   "nombre": "Aisha",
+   "sexo": "Hembra",
+   "edad": "1 año",
+   "raza": "Cruce grande",
+   "servicio": "Hogar Recreativo",
+   "distrito": "Los Olivos",
+   "tutores": [
+    "Emily Francia Alegria"
+   ],
+   "foto": "aisha.jpg",
+   "bano": "Normal",
+   "alimTipo": "Galletas",
+   "alimMarca": "Royal Canin",
+   "vacunas": [
+    {
+     "tipo": "Séxtuple"
+    },
+    {
+     "tipo": "Leptospira"
+    },
+    {
+     "tipo": "KC"
+    }
+   ],
+   "desparasitaciones": [
+    "2026-08-28"
+   ],
+   "antipulgas": [
+    {
+     "fecha": "2026-09-14",
+     "marca": "Nexgard"
+    }
+   ],
+   "peso": null,
+   "fechaNacimiento": null,
+   "observaciones": null
+  },
+  {
+   "nombre": "Layka",
+   "sexo": "Hembra",
+   "edad": "3 años",
+   "raza": "Cruce grande",
+   "servicio": "Hogar Recreativo",
+   "distrito": "Los Olivos",
+   "tutores": [
+    "Emily Francia Alegria"
+   ],
+   "foto": "layka.jpg",
+   "bano": "Normal",
+   "alimTipo": "Galletas",
+   "alimMarca": "Royal Canin",
+   "vacunas": [
+    {
+     "tipo": "Séxtuple"
+    },
+    {
+     "tipo": "Leptospira"
+    },
+    {
+     "tipo": "KC"
+    }
+   ],
+   "desparasitaciones": [
+    "2026-08-28"
+   ],
+   "antipulgas": [
+    {
+     "fecha": "2026-09-14",
+     "marca": "Nexgard"
+    }
+   ],
+   "peso": null,
+   "fechaNacimiento": null,
+   "observaciones": null
+  },
+  {
+   "nombre": "Nikita",
+   "sexo": "Hembra",
+   "edad": "3 años",
+   "raza": "Cruce Schnauzer-Poodle",
+   "servicio": "Hogar Recreativo",
+   "distrito": "Los Olivos",
+   "tutores": [
+    "Emily Francia Alegria"
+   ],
+   "foto": "nikita.jpg",
+   "bano": "Normal",
+   "alimTipo": "Galletas",
+   "alimMarca": "Royal Canin",
+   "vacunas": [
+    {
+     "tipo": "Séxtuple"
+    },
+    {
+     "tipo": "Leptospira"
+    },
+    {
+     "tipo": "KC"
+    }
+   ],
+   "desparasitaciones": [
+    "2026-08-28"
+   ],
+   "antipulgas": [
+    {
+     "fecha": "2026-09-14",
+     "marca": "Nexgard"
+    }
+   ],
+   "peso": null,
+   "fechaNacimiento": null,
+   "observaciones": null
+  },
+  {
+   "nombre": "Jack",
+   "sexo": "Macho",
+   "edad": "4 años",
+   "raza": "Bull Terrier",
+   "servicio": "Hogar Recreativo",
+   "distrito": "San Juan de Lurigancho",
+   "tutores": [
+    "Daniela Ceguera",
+    "Manfred Coarita"
+   ],
+   "foto": "jack.jpg",
+   "bano": "Medicado",
+   "alimTipo": "Galletas",
+   "alimMarca": "Equilibrio hipoalergénico",
+   "vacunas": [
+    {
+     "tipo": "Séxtuple",
+     "aplicada": "2026-09-05"
+    },
+    {
+     "tipo": "Leptospira",
+     "aplicada": "2026-09-16"
+    },
+    {
+     "tipo": "KC",
+     "aplicada": "2026-09-16"
+    }
+   ],
+   "desparasitaciones": [
+    "2026-08-28"
+   ],
+   "antipulgas": [
+    {
+     "marca": "Bravecto"
+    }
+   ],
+   "peso": null,
+   "fechaNacimiento": null,
+   "observaciones": "El documento original lista 'Jack / Ruffus' juntos; se registraron como dos perros (hay una foto de cada uno). Revisar datos individuales."
+  },
+  {
+   "nombre": "Ruffus",
+   "sexo": "Macho",
+   "edad": "4 años",
+   "raza": "Bull Terrier",
+   "servicio": "Hogar Recreativo",
+   "distrito": "San Juan de Lurigancho",
+   "tutores": [
+    "Daniela Ceguera",
+    "Manfred Coarita"
+   ],
+   "foto": "ruffus.jpg",
+   "bano": "Medicado",
+   "alimTipo": "Galletas",
+   "alimMarca": "Equilibrio hipoalergénico",
+   "vacunas": [
+    {
+     "tipo": "Séxtuple",
+     "aplicada": "2026-09-05"
+    },
+    {
+     "tipo": "Leptospira",
+     "aplicada": "2026-09-16"
+    },
+    {
+     "tipo": "KC",
+     "aplicada": "2026-09-16"
+    }
+   ],
+   "desparasitaciones": [
+    "2026-08-28"
+   ],
+   "antipulgas": [
+    {
+     "marca": "Bravecto"
+    }
+   ],
+   "peso": null,
+   "fechaNacimiento": null,
+   "observaciones": "El documento original lista 'Jack / Ruffus' juntos; se registraron como dos perros (hay una foto de cada uno). Revisar datos individuales."
+  },
+  {
+   "nombre": "Molly",
+   "sexo": "Hembra",
+   "edad": "3 años",
+   "raza": "Cruzada grande",
+   "servicio": "Hogar Recreativo",
+   "distrito": "Chorrillos",
+   "tutores": [
+    "Miguel Macavilca"
+   ],
+   "foto": "molly.jpg",
+   "bano": "Normal",
+   "alimTipo": "Comida casera",
+   "alimMarca": null,
+   "vacunas": [],
+   "desparasitaciones": [
+    "2026-08-28"
+   ],
+   "antipulgas": [],
+   "peso": null,
+   "fechaNacimiento": null,
+   "observaciones": null
+  },
+  {
+   "nombre": "Canela",
+   "sexo": "Hembra",
+   "edad": "3 años",
+   "raza": "Cruzada grande",
+   "servicio": "Hogar Recreativo",
+   "distrito": "Chorrillos",
+   "tutores": [
+    "Miguel Macavilca"
+   ],
+   "foto": "canela.jpg",
+   "bano": "Normal",
+   "alimTipo": "Comida casera",
+   "alimMarca": null,
+   "vacunas": [],
+   "desparasitaciones": [
+    "2026-08-28"
+   ],
+   "antipulgas": [],
+   "peso": null,
+   "fechaNacimiento": null,
+   "observaciones": null
+  },
+  {
+   "nombre": "Bruno",
+   "sexo": "Macho",
+   "edad": "16 años",
+   "raza": "Beagle pequeño",
+   "servicio": "Hogar Recreativo",
+   "distrito": "Pueblo Libre",
+   "tutores": [
+    "Jessica Carrion"
+   ],
+   "foto": "bruno.jpg",
+   "bano": "Normal",
+   "alimTipo": "Galletas y comida casera",
+   "alimMarca": null,
+   "vacunas": [],
+   "desparasitaciones": [
+    "2026-08-28"
+   ],
+   "antipulgas": [],
+   "peso": null,
+   "fechaNacimiento": null,
+   "observaciones": null
+  },
+  {
+   "nombre": "Pumba",
+   "sexo": "Macho",
+   "edad": "8 años",
+   "raza": "Cruce pequeño",
+   "servicio": "Hogar Recreativo",
+   "distrito": "Pueblo Libre",
+   "tutores": [
+    "Jessica Carrion"
+   ],
+   "foto": "pumba.jpg",
+   "bano": "Normal",
+   "alimTipo": "Galletas y comida casera",
+   "alimMarca": null,
+   "vacunas": [],
+   "desparasitaciones": [
+    "2026-08-28"
+   ],
+   "antipulgas": [],
+   "peso": null,
+   "fechaNacimiento": null,
+   "observaciones": null
+  },
+  {
+   "nombre": "Haku",
+   "sexo": "Macho",
+   "edad": "6 años",
+   "raza": "Rottweiler grande",
+   "servicio": "Hogar Recreativo",
+   "distrito": "Pueblo Libre",
+   "tutores": [
+    "Jhonny Valdez"
+   ],
+   "foto": "haku.jpg",
+   "bano": "Normal",
+   "alimTipo": "Galletas",
+   "alimMarca": "Cambo",
+   "vacunas": [],
+   "desparasitaciones": [
+    "2026-08-28"
+   ],
+   "antipulgas": [],
+   "peso": null,
+   "fechaNacimiento": null,
+   "observaciones": null
+  },
+  {
+   "nombre": "Cirilo",
+   "sexo": "Macho",
+   "edad": "5 años",
+   "raza": "Cruce pequeño",
+   "servicio": "Hogar Recreativo",
+   "distrito": "Magdalena",
+   "tutores": [
+    "Gabriela Roche"
+   ],
+   "foto": "cirilo.jpg",
+   "bano": "Normal",
+   "alimTipo": "Galletas",
+   "alimMarca": "Dog Chow razas pequeñas",
+   "vacunas": [],
+   "desparasitaciones": [
+    "2026-08-28"
+   ],
+   "antipulgas": [],
+   "peso": null,
+   "fechaNacimiento": null,
+   "observaciones": null
+  },
+  {
+   "nombre": "Pancho",
+   "sexo": "Macho",
+   "edad": "2 años",
+   "raza": "Golden grande",
+   "servicio": "Hogar Recreativo",
+   "distrito": "San Isidro",
+   "tutores": [
+    "Alvaro Almenara"
+   ],
+   "foto": "pancho.jpg",
+   "bano": "Medicado",
+   "alimTipo": "BARF y galletas",
+   "alimMarca": "Hills",
+   "vacunas": [],
+   "desparasitaciones": [
+    "2026-08-28"
+   ],
+   "antipulgas": [],
+   "peso": null,
+   "fechaNacimiento": null,
+   "observaciones": null
+  },
+  {
+   "nombre": "Toffy",
+   "sexo": "Macho",
+   "edad": "5 años",
+   "raza": "Cruce pequeño",
+   "servicio": "Hogar Recreativo",
+   "distrito": "San Isidro",
+   "tutores": [
+    "Kirk Sanchez"
+   ],
+   "foto": "toffy.jpg",
+   "bano": "Normal",
+   "alimTipo": "Comida casera",
+   "alimMarca": null,
+   "vacunas": [],
+   "desparasitaciones": [
+    "2026-08-28"
+   ],
+   "antipulgas": [],
+   "peso": null,
+   "fechaNacimiento": null,
+   "observaciones": null
+  },
+  {
+   "nombre": "Khalil",
+   "sexo": "Macho",
+   "edad": "9 años",
+   "raza": "Bull Terrier",
+   "servicio": "Hogar Recreativo",
+   "distrito": "La Victoria",
+   "tutores": [
+    "Adrian Peña"
+   ],
+   "foto": "khalil.jpg",
+   "bano": "Medicado",
+   "alimTipo": "BARF",
+   "alimMarca": null,
+   "vacunas": [],
+   "desparasitaciones": [
+    "2026-08-28"
+   ],
+   "antipulgas": [],
+   "peso": null,
+   "fechaNacimiento": null,
+   "observaciones": null
+  },
+  {
+   "nombre": "Zuca",
+   "sexo": "Hembra",
+   "edad": "7 años",
+   "raza": "Pastor Belga Malinois",
+   "servicio": "Perros de la Casa",
+   "distrito": "San Miguel",
+   "tutores": [
+    "Victor Manrique"
+   ],
+   "foto": "zuca.jpg",
+   "bano": "Normal",
+   "alimTipo": "Galletas y comida casera",
+   "alimMarca": "Cambo",
+   "vacunas": [],
+   "desparasitaciones": [
+    "2026-08-28"
+   ],
+   "antipulgas": [],
+   "peso": null,
+   "fechaNacimiento": "2019-09-10",
+   "observaciones": null
+  },
+  {
+   "nombre": "Kiko",
+   "sexo": "Macho",
+   "edad": "8 años",
+   "raza": "Cruce mediano",
+   "servicio": "Perros de la Casa",
+   "distrito": "San Miguel",
+   "tutores": [
+    "Victor Manrique"
+   ],
+   "foto": "kiko.jpg",
+   "bano": "Normal",
+   "alimTipo": "Galletas y comida casera",
+   "alimMarca": "Cambo",
+   "vacunas": [],
+   "desparasitaciones": [
+    "2026-08-28"
+   ],
+   "antipulgas": [],
+   "peso": null,
+   "fechaNacimiento": null,
+   "observaciones": null
+  },
+  {
+   "nombre": "Brisa",
+   "sexo": "Hembra",
+   "edad": "5 años",
+   "raza": "Cruce mediano",
+   "servicio": "Perros de la Casa",
+   "distrito": "San Miguel",
+   "tutores": [
+    "Victor Manrique"
+   ],
+   "foto": "brisa.jpg",
+   "bano": "Normal",
+   "alimTipo": "Galletas y comida casera",
+   "alimMarca": "Cambo",
+   "vacunas": [],
+   "desparasitaciones": [
+    "2026-08-28"
+   ],
+   "antipulgas": [],
+   "peso": null,
+   "fechaNacimiento": null,
+   "observaciones": null
+  },
+  {
+   "nombre": "Nutella",
+   "sexo": "Macho",
+   "edad": null,
+   "raza": "Labrador grande",
+   "servicio": "Hospedaje Exclusivo",
+   "distrito": "Cercado",
+   "tutores": [],
+   "foto": "nutella.jpg",
+   "bano": null,
+   "alimTipo": null,
+   "alimMarca": null,
+   "vacunas": [],
+   "desparasitaciones": [
+    "2026-08-28"
+   ],
+   "antipulgas": [],
+   "peso": null,
+   "fechaNacimiento": null,
+   "observaciones": "Sin tutor registrado en el documento original."
+  },
+  {
+   "nombre": "Kuki",
+   "sexo": "Hembra",
+   "edad": "9 años",
+   "raza": null,
+   "servicio": "Hospedaje Exclusivo",
+   "distrito": "Chorrillos",
+   "tutores": [
+    "Oswaldo Saavedra"
+   ],
+   "foto": "kuki.jpg",
+   "bano": "Medicado",
+   "alimTipo": "Galletas y comida casera",
+   "alimMarca": null,
+   "vacunas": [],
+   "desparasitaciones": [
+    "2026-08-28"
+   ],
+   "antipulgas": [],
+   "peso": null,
+   "fechaNacimiento": null,
+   "observaciones": null
+  },
+  {
+   "nombre": "Ricardo",
+   "sexo": "Macho",
+   "edad": "3 años",
+   "raza": "Cruce pequeño",
+   "servicio": "Hospedaje Exclusivo",
+   "distrito": "Lurín",
+   "tutores": [
+    "Carolina Diaz"
+   ],
+   "foto": "ricardo.jpg",
+   "bano": null,
+   "alimTipo": null,
+   "alimMarca": null,
+   "vacunas": [],
+   "desparasitaciones": [
+    "2026-08-28"
+   ],
+   "antipulgas": [],
+   "peso": 7.4,
+   "fechaNacimiento": null,
+   "observaciones": null
+  },
+  {
+   "nombre": "Katrina",
+   "sexo": "Hembra",
+   "edad": "4 años",
+   "raza": "Cruce pequeño",
+   "servicio": "Hospedaje Frecuente",
+   "distrito": "Pueblo Libre",
+   "tutores": [
+    "Sara Montoya"
+   ],
+   "foto": "katrina.jpg",
+   "bano": null,
+   "alimTipo": "Galletas",
+   "alimMarca": "Cambo",
+   "vacunas": [],
+   "desparasitaciones": [],
+   "antipulgas": [],
+   "peso": null,
+   "fechaNacimiento": null,
+   "observaciones": null
+  },
+  {
+   "nombre": "Alonso",
+   "sexo": "Macho",
+   "edad": "8 años",
+   "raza": "Cruce grande",
+   "servicio": "Hospedaje Frecuente",
+   "distrito": "San Isidro",
+   "tutores": [
+    "Monica Acosta"
+   ],
+   "foto": "alonso.jpg",
+   "bano": null,
+   "alimTipo": "Galletas",
+   "alimMarca": "Cambo",
+   "vacunas": [],
+   "desparasitaciones": [],
+   "antipulgas": [],
+   "peso": 32,
+   "fechaNacimiento": null,
+   "observaciones": null
+  },
+  {
+   "nombre": "Kassia",
+   "sexo": "Hembra",
+   "edad": "2 años",
+   "raza": "Pastor Alemán grande",
+   "servicio": "Hospedaje Frecuente",
+   "distrito": "San Borja",
+   "tutores": [
+    "Francisco Gonzales",
+    "Carla Sagastisaval"
+   ],
+   "foto": "kassia.jpg",
+   "bano": "Normal",
+   "alimTipo": "Galletas",
+   "alimMarca": "Cambo",
+   "vacunas": [
+    {
+     "tipo": "Otra",
+     "aplicada": "2026-09-08",
+     "obs": "El documento no indica qué vacunas se aplicaron"
+    }
+   ],
+   "desparasitaciones": [
+    "2026-09-08"
+   ],
+   "antipulgas": [],
+   "peso": null,
+   "fechaNacimiento": null,
+   "observaciones": null
+  },
+  {
+   "nombre": "Danna",
+   "sexo": "Hembra",
+   "edad": "5 años",
+   "raza": "American Bully",
+   "servicio": "Hospedaje Frecuente",
+   "distrito": "San Borja",
+   "tutores": [
+    "Jorge Montero"
+   ],
+   "foto": "danna.jpg",
+   "bano": "Medicado",
+   "alimTipo": "BARF",
+   "alimMarca": null,
+   "vacunas": [],
+   "desparasitaciones": [],
+   "antipulgas": [],
+   "peso": null,
+   "fechaNacimiento": null,
+   "observaciones": null
+  }
+ ]
+}

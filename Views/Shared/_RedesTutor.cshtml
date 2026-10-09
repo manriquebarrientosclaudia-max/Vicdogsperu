@@ -1,0 +1,18 @@
+@model Tutor
+@* Íconos con enlace a las redes del tutor (solo se muestran las que tiene) *@
+@{
+    var redes = new[]
+    {
+        (Red: "instagram", Icono: "bi-instagram", Nombre: "Instagram", Valor: Model.Instagram),
+        (Red: "tiktok",    Icono: "bi-tiktok",    Nombre: "TikTok",    Valor: Model.TikTok),
+        (Red: "facebook",  Icono: "bi-facebook",  Nombre: "Facebook",  Valor: Model.Facebook)
+    };
+}
+@foreach (var r in redes)
+{
+    var enlace = Ayudas.EnlaceRed(r.Valor, r.Red);
+    if (enlace == null) { continue; }
+    <a href="@enlace" target="_blank" rel="noopener" class="chip chip-linea" title="@r.Nombre: @Ayudas.TextoRed(r.Valor, r.Red)">
+        <i class="bi @r.Icono"></i> @Ayudas.TextoRed(r.Valor, r.Red)
+    </a>
+}

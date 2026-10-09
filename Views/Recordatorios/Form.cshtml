@@ -1,0 +1,98 @@
+@model Recordatorio
+@{
+    var esNuevo = Model.Id == 0;
+    ViewData["Title"] = esNuevo ? "Nuevo recordatorio" : "Editar recordatorio";
+}
+<div class="d-flex justify-content-between align-items-end mb-3">
+    <h1 class="titulo">@(esNuevo ? "Nuevo recordatorio" : "Editar recordatorio")</h1>
+    <a asp-action="Index" class="btn btn-outline-dark">Cancelar</a>
+</div>
+
+<form asp-action="@(esNuevo ? "Create" : "Edit")" asp-route-id="@(esNuevo ? (int?)null : Model.Id)" method="post" class="panel-caja mx-auto" style="max-width:720px">
+    <div class="row g-3">
+        <div class="col-12">
+            <label asp-for="Titulo" class="form-label"></label>
+            <input asp-for="Titulo" class="form-control" placeholder="Ej. Pagar el internet" required />
+            <span asp-validation-for="Titulo" class="text-danger small"></span>
+        </div>
+
+        <div class="col-md-6">
+            <label asp-for="Frecuencia" class="form-label"></label>
+            <select asp-for="Frecuencia" class="form-select" id="frecuencia">
+                <option value="Mensual">Todos los meses</option>
+                <option value="Semanal">Todas las semanas</option>
+                <option value="Anual">Todos los años</option>
+                <option value="UnaVez">Una sola vez</option>
+            </select>
+            <span asp-validation-for="Frecuencia" class="text-danger small"></span>
+        </div>
+
+        <div class="col-md-6 grupo" data-para="Mensual">
+            <label asp-for="DiaMes" class="form-label"></label>
+            <input asp-for="DiaMes" type="number" min="1" max="31" class="form-control" placeholder="Ej. 4" />
+            <span asp-validation-for="DiaMes" class="text-danger small"></span>
+            <div class="form-text">Si el mes no tiene ese día (por ejemplo 31), avisa el último día del mes.</div>
+        </div>
+
+        <div class="col-md-6 grupo" data-para="Semanal">
+            <label asp-for="DiaSemana" class="form-label"></label>
+            <select asp-for="DiaSemana" class="form-select">
+                <option value="1">Lunes</option><option value="2">Martes</option><option value="3">Miércoles</option>
+                <option value="4">Jueves</option><option value="5">Viernes</option><option value="6">Sábado</option>
+                <option value="0">Domingo</option>
+            </select>
+            <span asp-validation-for="DiaSemana" class="text-danger small"></span>
+        </div>
+
+        <div class="col-md-6 grupo" data-para="Anual UnaVez">
+            <label asp-for="Fecha" class="form-label"></label>
+            <input asp-for="Fecha" type="date" class="form-control" />
+            <span asp-validation-for="Fecha" class="text-danger small"></span>
+            <div class="form-text grupo" data-para="Anual">Se repetirá cada año el mismo día y mes.</div>
+        </div>
+
+        <div class="col-md-6">
+            <label asp-for="AvisarDiasAntes" class="form-label"></label>
+            <select asp-for="AvisarDiasAntes" class="form-select">
+                <option value="0">El mismo día</option>
+                <option value="1">1 día antes</option>
+                <option value="2">2 días antes</option>
+                <option value="3">3 días antes</option>
+                <option value="7">7 días antes</option>
+            </select>
+        </div>
+
+        <div class="col-12">
+            <label asp-for="Notas" class="form-label"></label>
+            <input asp-for="Notas" class="form-control" placeholder="Opcional. Ej. Monto, número de contrato…" />
+        </div>
+
+        <div class="col-12">
+            <div class="form-check form-switch">
+                <input asp-for="Activo" class="form-check-input" />
+                <label asp-for="Activo" class="form-check-label">Recordatorio activo</label>
+            </div>
+            <div class="form-text">Si lo pausas, deja de aparecer en el panel pero no se borra.</div>
+        </div>
+
+        <div class="col-12">
+            <button type="submit" class="btn btn-azul">@(esNuevo ? "Guardar recordatorio" : "Guardar cambios")</button>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+<script>
+    (function () {
+        var sel = document.getElementById('frecuencia');
+        function actualizar() {
+            document.querySelectorAll('.grupo').forEach(function (g) {
+                var para = g.getAttribute('data-para').split(' ');
+                g.style.display = para.indexOf(sel.value) >= 0 ? '' : 'none';
+            });
+        }
+        sel.addEventListener('change', actualizar);
+        actualizar();
+    })();
+</script>
+}

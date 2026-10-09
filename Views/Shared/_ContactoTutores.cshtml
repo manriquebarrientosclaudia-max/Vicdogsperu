@@ -1,0 +1,38 @@
+@model List<Tutor>
+@* Tarjetas de contacto de tutores: teléfono, llamar, WhatsApp y dirección *@
+<div class="contactos">
+@foreach (var t in Model)
+{
+    var wa = Ayudas.EnlaceWhatsApp(t.Telefono);
+    var llamar = Ayudas.EnlaceLlamar(t.Telefono);
+    <div class="contacto">
+        <div class="contacto-nombre">
+            <i class="bi bi-person-fill"></i>
+            <a asp-controller="Tutores" asp-action="Details" asp-route-id="@t.Id">@t.Nombre</a>
+        </div>
+        <div class="contacto-datos">
+            @if (llamar != null)
+            {
+                <a href="@llamar" class="contacto-tel"><i class="bi bi-telephone-fill"></i> @t.Telefono</a>
+                @if (wa != null)
+                {
+                    <a href="@wa" target="_blank" rel="noopener" class="chip chip-linea"><i class="bi bi-whatsapp"></i> WhatsApp</a>
+                }
+            }
+            else
+            {
+                <span class="text-muted small">Sin teléfono registrado</span>
+            }
+            <partial name="_RedesTutor" model="t" />
+            @if (!string.IsNullOrEmpty(t.Direccion))
+            {
+                <div class="small text-muted"><i class="bi bi-geo-alt-fill"></i> @t.Direccion</div>
+            }
+            @if (t.Cumpleanos.HasValue)
+            {
+                <div class="small text-muted"><i class="bi bi-cake2-fill"></i> Cumpleaños: @t.Cumpleanos.Value.DiaYMes()</div>
+            }
+        </div>
+    </div>
+}
+</div>

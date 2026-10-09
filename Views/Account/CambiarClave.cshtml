@@ -1,0 +1,15 @@
+@{ ViewData["Title"] = "Cambiar contraseña"; }
+<div class="panel-caja mx-auto" style="max-width:480px">
+    <h1 class="titulo h3 mb-3">Cambiar contraseña</h1>
+    @if (ViewBag.Error != null) { <div class="alert alert-danger py-2" role="alert">@ViewBag.Error</div> }
+    @if (ViewBag.Ok != null) { <div class="alert alert-dark py-2" role="status">@ViewBag.Ok</div> }
+    <form asp-action="CambiarClave" method="post">
+        <div class="mb-3"><label class="form-label" for="claveActual">Contraseña actual</label>
+            <input class="form-control" id="claveActual" name="claveActual" type="password" required autocomplete="current-password" /></div>
+        <div class="mb-3"><label class="form-label" for="claveNueva">Nueva contraseña (mínimo 8 caracteres)</label>
+            <input class="form-control" id="claveNueva" name="claveNueva" type="password" required minlength="8" autocomplete="new-password" /></div>
+        <div class="mb-4"><label class="form-label" for="confirmar">Repite la nueva contraseña</label>
+            <input class="form-control" id="confirmar" name="confirmar" type="password" required autocomplete="new-password" /></div>
+        <button type="submit" class="btn btn-azul">Guardar contraseña</button>
+    </form>
+</div>

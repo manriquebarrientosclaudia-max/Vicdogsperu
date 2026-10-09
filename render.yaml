@@ -1,0 +1,47 @@
+# Todo en planes GRATUITOS de Render (sirve para probar):
+#  - La base de datos gratis se borra a los 30 días.
+#  - La web gratis se "duerme" tras 15 min sin visitas (la primera visita tarda ~1 min en despertar).
+#  - Sin disco: las fotos que subas desde la app se pierden cuando la web se reinicia o redespliega.
+databases:
+  - name: vicdogs-db
+    databaseName: vicdogs
+    user: vicdogs
+    region: virginia
+    plan: free
+
+services:
+  - type: web
+    name: vicdogs-web
+    runtime: docker
+    region: virginia            # misma región que la base de datos
+    plan: free
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /health
+    envVars:
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
+      - key: DB_HOST
+        fromDatabase:
+          name: vicdogs-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: vicdogs-db
+          property: port
+      - key: DB_NAME
+        fromDatabase:
+          name: vicdogs-db
+          property: database
+      - key: DB_USER
+        fromDatabase:
+          name: vicdogs-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: vicdogs-db
+          property: password
+      - key: Admin__Usuario
+        value: admin
+      - key: Admin__Clave
+        sync: false             # Render te la pedirá al crear el Blueprint

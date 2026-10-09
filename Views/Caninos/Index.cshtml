@@ -1,0 +1,103 @@
+@model List<Canino>
+@{
+    ViewData["Title"] = "Caninos";
+    string servSel = ViewBag.ServicioId?.ToString();
+    string qSel = ViewBag.Q;
+    string distSel = ViewBag.Distrito;
+    string sexoSel = ViewBag.Sexo;
+    string estSel = ViewBag.Estado;
+}
+<div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-3">
+    <div>
+        <h1 class="titulo">Caninos</h1>
+        <p class="text-muted mb-0">@Model.Count @(Model.Count == 1 ? "perro" : "perros") con los filtros actuales.</p>
+    </div>
+    <div class="d-flex flex-wrap gap-2">
+        <a class="btn btn-outline-dark" asp-action="Exportar" asp-route-q="@qSel" asp-route-servicioId="@servSel"
+           asp-route-distrito="@distSel" asp-route-sexo="@sexoSel" asp-route-estado="@estSel"><i class="bi bi-file-earmark-excel"></i> Exportar a Excel</a>
+        <a class="btn btn-outline-dark" asp-action="FichasWord" asp-route-q="@qSel" asp-route-servicioId="@servSel"
+           asp-route-distrito="@distSel" asp-route-sexo="@sexoSel" asp-route-estado="@estSel"
+           title="Una ficha por perro, una por página, con los filtros actuales"><i class="bi bi-file-earmark-word"></i> Fichas en Word</a>
+        <a class="btn btn-azul" asp-action="Create"><i class="bi bi-plus-lg"></i> Nuevo perro</a>
+    </div>
+</div>
+
+<form method="get" asp-action="Index" class="filtros mb-4">
+    <div class="row g-2 align-items-end">
+        <div class="col-12 col-md-4">
+            <label class="form-label" for="q">Buscar por perro, raza o tutor</label>
+            <input class="form-control" id="q" name="q" value="@ViewBag.Q" placeholder="Ej. Iggy, Beagle, Mirella" />
+        </div>
+        <div class="col-6 col-md-2">
+            <label class="form-label" for="servicioId">Servicio</label>
+            <select class="form-select" id="servicioId" name="servicioId">
+                <option value="">Todos</option>
+                @foreach (var s in (SelectList)ViewBag.Servicios)
+                {
+                    <option value="@s.Value" selected="@(s.Value == servSel)">@s.Text</option>
+                }
+            </select>
+        </div>
+        <div class="col-6 col-md-2">
+            <label class="form-label" for="distrito">Distrito</label>
+            <select class="form-select" id="distrito" name="distrito">
+                <option value="">Todos</option>
+                @foreach (var d in (List<string>)ViewBag.Distritos)
+                {
+                    <option value="@d" selected="@(d == distSel)">@d</option>
+                }
+            </select>
+        </div>
+        <div class="col-6 col-md-1">
+            <label class="form-label" for="sexo">Sexo</label>
+            <select class="form-select" id="sexo" name="sexo">
+                <option value="">Todos</option>
+                <option value="Macho" selected="@(sexoSel == "Macho")">Macho</option>
+                <option value="Hembra" selected="@(sexoSel == "Hembra")">Hembra</option>
+            </select>
+        </div>
+        <div class="col-6 col-md-1">
+            <label class="form-label" for="estado">Estado</label>
+            <select class="form-select" id="estado" name="estado">
+                <option value="">Activos</option>
+                <option value="inactivos" selected="@(estSel == "inactivos")">Inactivos</option>
+                <option value="todos" selected="@(estSel == "todos")">Todos</option>
+            </select>
+        </div>
+        <div class="col-12 col-md-2 d-flex gap-2">
+            <button type="submit" class="btn btn-dark flex-fill">Filtrar</button>
+            <a asp-action="Index" class="btn btn-outline-dark">Limpiar</a>
+        </div>
+    </div>
+</form>
+
+@if (!Model.Any())
+{
+    <div class="panel-caja vacio">No hay perros con estos filtros. Quita algún filtro o registra un perro nuevo.</div>
+}
+else
+{
+    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-3">
+        @foreach (var c in Model)
+        {
+            var est = c.EstadoVacunas();
+            <div class="col">
+                <a asp-action="Details" asp-route-id="@c.Id" class="tarjeta-perro @(c.Activo ? "" : "inactivo")">
+                    <div class="foto"><img src="@c.FotoOPlaceholder" alt="Foto de @c.Nombre" loading="lazy" /></div>
+                    <div class="placa">@c.Nombre</div>
+                    <div class="datos">
+                        <div class="fw-bold">@(c.Servicio?.Nombre)</div>
+                        <div class="text-muted">@(string.IsNullOrEmpty(c.Distrito) ? "Sin distrito" : c.Distrito)</div>
+                        @if (!c.Tutores.Any()) { <div class="text-muted">Sin tutor</div> }
+                        @foreach (var t in c.Tutores)
+                        {
+                            <div class="tutor-linea"><i class="bi bi-person-fill"></i> @t.Tutor.Nombre@(string.IsNullOrEmpty(t.Tutor.Telefono) ? "" : " · " + t.Tutor.Telefono)</div>
+                        }
+                        <span class="chip @est.Clase mt-2">@est.Texto</span>
+                        @if (!c.Activo) { <span class="chip chip-negro mt-2">Inactivo</span> }
+                    </div>
+                </a>
+            </div>
+        }
+    </div>
+}

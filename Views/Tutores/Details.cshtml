@@ -1,0 +1,99 @@
+@model Tutor
+@{
+    ViewData["Title"] = Model.Nombre;
+    var wa = Ayudas.EnlaceWhatsApp(Model.Telefono);
+    var llamar = Ayudas.EnlaceLlamar(Model.Telefono);
+}
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+    <a asp-action="Index" class="enlace-suave"><i class="bi bi-arrow-left"></i> Volver a tutores</a>
+    <div class="d-flex gap-2">
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-azul"><i class="bi bi-pencil-fill"></i> Editar datos</a>
+        <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-outline-dark"><i class="bi bi-trash"></i> Eliminar</a>
+    </div>
+</div>
+<div class="row g-4">
+    <div class="col-lg-4">
+        <section class="panel-caja">
+            <h1 class="titulo h3">@Model.Nombre</h1>
+            <dl class="ficha una-columna">
+                <div><dt>Teléfono</dt>
+                    <dd>
+                        @if (llamar != null)
+                        {
+                            <a href="@llamar" class="contacto-tel">@Model.Telefono</a>
+                            @if (wa != null) { <a href="@wa" target="_blank" rel="noopener" class="chip chip-linea"><i class="bi bi-whatsapp"></i> WhatsApp</a> }
+                        }
+                        else { <span>—</span> }
+                    </dd></div>
+                <div><dt>Cumpleaños</dt><dd>@(Model.Cumpleanos.HasValue ? Model.Cumpleanos.Value.DiaYMes() : "—")</dd></div>
+                <div><dt>Dirección</dt><dd>@(string.IsNullOrEmpty(Model.Direccion) ? "—" : Model.Direccion)</dd></div>
+            </dl>
+            @{
+                var enlIg = Ayudas.EnlaceRed(Model.Instagram, "instagram");
+                var enlTt = Ayudas.EnlaceRed(Model.TikTok, "tiktok");
+                var enlFb = Ayudas.EnlaceRed(Model.Facebook, "facebook");
+            }
+            <h2 class="h6 fw-bold mt-3 mb-2">Redes sociales</h2>
+            @if (enlIg == null && enlTt == null && enlFb == null)
+            {
+                <p class="vacio mb-3">Sin redes registradas. Agrégalas en «Editar datos».</p>
+            }
+            else
+            {
+                <div class="redes-lista mb-3">
+                    @foreach (var r in new[] {
+                        (Enlace: enlIg, Icono: "bi-instagram", Nombre: "Instagram", Texto: Ayudas.TextoRed(Model.Instagram, "instagram")),
+                        (Enlace: enlTt, Icono: "bi-tiktok", Nombre: "TikTok", Texto: Ayudas.TextoRed(Model.TikTok, "tiktok")),
+                        (Enlace: enlFb, Icono: "bi-facebook", Nombre: "Facebook", Texto: Ayudas.TextoRed(Model.Facebook, "facebook")) })
+                    {
+                        if (r.Enlace == null) { continue; }
+                        <div class="red-fila">
+                            <span class="red-icono"><i class="bi @r.Icono"></i></span>
+                            <div class="red-usuario"><small class="text-muted">@r.Nombre</small><strong>@r.Texto</strong></div>
+                            <a href="@r.Enlace" target="_blank" rel="noopener" class="btn btn-sm btn-azul">Abrir</a>
+                        </div>
+                    }
+                </div>
+            }
+            @if (!string.IsNullOrEmpty(Model.Notas)) { <div class="nota"><strong>Notas:</strong> @Model.Notas</div> }
+        </section>
+    </div>
+    <div class="col-lg-8">
+        <section class="panel-caja">
+            <h2 class="titulo h4">@(Model.Caninos.Count == 1 ? "Perro" : "Perros")</h2>
+            @if (!Model.Caninos.Any()) { <p class="vacio mb-0">Este tutor no tiene perros asignados.</p> }
+            else
+            {
+                @foreach (var x in Model.Caninos.OrderBy(ct => ct.Canino.Nombre))
+                {
+                    var otros = x.Canino.Tutores.Where(o => o.TutorId != Model.Id).Select(o => o.Tutor).OrderBy(o => o.Nombre).ToList();
+                    <div class="perro-bloque">
+                        <div class="d-flex align-items-center gap-3">
+                            <a asp-controller="Caninos" asp-action="Details" asp-route-id="@x.Canino.Id" class="perro-mini grande">
+                                <img src="@x.Canino.FotoOPlaceholder" alt="Foto de @x.Canino.Nombre" />
+                            </a>
+                            <div>
+                                <a asp-controller="Caninos" asp-action="Details" asp-route-id="@x.Canino.Id" class="fw-bold enlace-negro fs-5">@x.Canino.Nombre</a>
+                                <div class="small text-muted">
+                                    @(x.Canino.Servicio?.Nombre)
+                                    @if (!string.IsNullOrEmpty(x.Canino.Distrito)) { <span> · <i class="bi bi-geo-alt-fill"></i> @x.Canino.Distrito</span> }
+                                </div>
+                            </div>
+                        </div>
+                        @if (otros.Any())
+                        {
+                            <div class="otros-tutores">
+                                <div class="small fw-bold mb-1"><i class="bi bi-people-fill"></i> @(otros.Count == 1 ? "Su otro tutor" : "Sus otros tutores")</div>
+                                <partial name="_ContactoTutores" model="otros" />
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="small text-muted mt-2">@Model.Nombre es el único tutor de @x.Canino.Nombre.</div>
+                        }
+                    </div>
+                }
+            }
+        </section>
+    </div>
+</div>
