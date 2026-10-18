@@ -39,6 +39,17 @@ public class Tutor
     [StringLength(200)] [Display(Name = "Facebook")] public string Facebook { get; set; }
 
     public ICollection<CaninoTutor> Caninos { get; set; } = new List<CaninoTutor>();
+
+    [NotMapped]
+    public string Iniciales
+    {
+        get
+        {
+            var partes = (Nombre ?? "").Split(' ', StringSplitOptions.RemoveEmptyEntries);
+            if (partes.Length == 0) return "?";
+            return partes.Length == 1 ? partes[0][..1].ToUpper() : (partes[0][..1] + partes[1][..1]).ToUpper();
+        }
+    }
 }
 
 public class Canino

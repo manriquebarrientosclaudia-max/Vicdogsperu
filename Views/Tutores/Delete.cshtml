@@ -1,6 +1,7 @@
 @model Tutor
 @{ ViewData["Title"] = "Eliminar a " + Model.Nombre; }
 <div class="panel-caja mx-auto text-center" style="max-width:520px">
+    <span class="avatar-iniciales avatar-grande mx-auto mb-3" aria-hidden="true">@Model.Iniciales</span>
     <h1 class="titulo h3">¿Eliminar a @Model.Nombre?</h1>
     <p class="text-muted">Se borra solo la ficha del tutor. @(Model.Caninos.Any() ? "Sus perros (" + string.Join(", ", Model.Caninos.Select(x => x.Canino.Nombre)) + ") seguirán registrados, pero quedarán sin este tutor." : "No tiene perros asignados.")</p>
     <div class="d-flex flex-wrap justify-content-center gap-2">

@@ -325,3 +325,33 @@ a.celda:hover { filter: brightness(1.15); }
 .tabla-mes .col-perro .persona { gap: .55rem; }
 .tabla-mes .col-perro { min-width: 200px; }
 .tabla-mes .persona-datos small { font-weight: 400; }
+
+/* ---------- Tutores ---------- */
+.avatar-grande { width: 56px; height: 56px; font-size: 1.25rem; }
+.tutores-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 1rem; }
+.tutor-card { display: flex; flex-direction: column; gap: .9rem; background: var(--blanco); border: 1px solid var(--linea); border-radius: var(--radio); padding: 1.1rem; box-shadow: var(--sombra); transition: border-color .15s, box-shadow .15s; }
+.tutor-card:hover { border-color: var(--azul); box-shadow: var(--sombra-alta); }
+.tutor-card-cabeza { display: flex; align-items: center; gap: .85rem; }
+.tutor-card-nombre { flex: 1; min-width: 0; line-height: 1.25; }
+.tutor-nombre-enlace { font-family: var(--fuente-titulo); font-weight: 600; font-size: 1.2rem; color: var(--negro); text-decoration: none; }
+.tutor-nombre-enlace:hover { color: var(--azul); text-decoration: underline; }
+.tutor-card-contacto { display: flex; flex-wrap: wrap; gap: .4rem; align-items: center; padding-top: .8rem; border-top: 1px solid var(--linea); }
+.tutor-card-contacto .chip { margin: 0; }
+.tutor-card-perros { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: auto; background: var(--azul-tenue); border-radius: var(--radio-s); padding: .6rem; }
+.perro-chip { display: inline-flex; align-items: center; gap: .5rem; background: #fff; border: 1px solid var(--linea); border-radius: 999px; padding: .2rem .8rem .2rem .25rem; text-decoration: none; color: var(--negro); font-weight: 700; font-size: .88rem; line-height: 1.15; transition: border-color .15s; }
+.perro-chip:hover { border-color: var(--azul); color: var(--negro); }
+.perro-chip img { width: 30px; height: 30px; border-radius: 50%; object-fit: cover; border: 2px solid var(--azul); }
+.perro-chip small { font-weight: 500; color: var(--azul); font-size: .72rem; }
+
+.tutor-hero { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 1.25rem; background: var(--azul); color: #fff; border-radius: var(--radio); padding: 1.4rem 1.5rem; border-bottom: 8px solid var(--negro); box-shadow: var(--sombra-alta); }
+.avatar-hero { flex: none; width: 76px; height: 76px; border-radius: 50%; background: #fff; color: var(--azul); display: grid; place-items: center; font-family: var(--fuente-titulo); font-weight: 600; font-size: 1.9rem; }
+.tutor-hero-texto { flex: 1; min-width: 220px; }
+.tutor-hero .titulo { color: #fff; margin: 0 0 .2rem; font-size: clamp(1.6rem, 1.2rem + 1.6vw, 2.2rem); }
+.tutor-hero-acciones { display: flex; flex-wrap: wrap; gap: .5rem; }
+.btn-blanco { background: #fff; color: var(--azul); border: 1.5px solid #fff; }
+.btn-blanco:hover { background: var(--azul-suave); color: var(--azul); border-color: var(--azul-suave); }
+.btn-blanco-linea { background: transparent; color: #fff; border: 1.5px solid rgba(255, 255, 255, .7); }
+.btn-blanco-linea:hover { background: #fff; color: var(--azul); border-color: #fff; }
+.input-group-text { background: var(--azul-tenue); border: 1.5px solid #B9C2DB; border-radius: 12px 0 0 12px; color: var(--azul); }
+.input-group > .form-control { border-radius: 0 12px 12px 0; }
+@media (max-width: 575px) { .tutores-grid { grid-template-columns: 1fr; } .tutor-hero { padding: 1.1rem; } }

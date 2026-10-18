@@ -3,7 +3,7 @@
 <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-3">
     <div>
         <h1 class="titulo">Tutores</h1>
-        <p class="text-muted mb-0">@Model.Count @(Model.Count == 1 ? "tutor" : "tutores") con los filtros actuales.</p>
+        <p class="text-muted mb-0">@Model.Count @(Model.Count == 1 ? "tutor" : "tutores")@(string.IsNullOrWhiteSpace((string)ViewBag.Q) ? "" : " que coinciden con tu búsqueda").</p>
     </div>
     <a asp-action="Create" class="btn btn-azul"><i class="bi bi-plus-lg"></i> Nuevo tutor</a>
 </div>
@@ -12,7 +12,10 @@
     <div class="row g-2 align-items-end">
         <div class="col-12 col-md-6">
             <label class="form-label" for="q">Buscar por tutor, teléfono o perro</label>
-            <input class="form-control" id="q" name="q" value="@ViewBag.Q" />
+            <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-search"></i></span>
+                <input class="form-control" id="q" name="q" value="@ViewBag.Q" placeholder="Ej. Mirella, 987654321 o Iggy" />
+            </div>
         </div>
         <div class="col-12 col-md-3 d-flex gap-2">
             <button type="submit" class="btn btn-dark flex-fill">Buscar</button>
@@ -27,52 +30,48 @@
 }
 else
 {
-    <div class="panel-caja p-0">
-        <div class="table-responsive">
-            <table class="table align-middle tabla-vic mb-0">
-                <thead><tr><th>Tutor</th><th>Cumpleaños</th><th>Zona</th><th>Perros y con quién los comparte</th><th></th></tr></thead>
-                <tbody>
-                @foreach (var t in Model)
+    <div class="tutores-grid">
+    @foreach (var t in Model)
+    {
+        var wa = Ayudas.EnlaceWhatsApp(t.Telefono);
+        var llamar = Ayudas.EnlaceLlamar(t.Telefono);
+        var zonas = t.Caninos.Select(cx => cx.Canino.Distrito).Where(d => !string.IsNullOrEmpty(d)).Distinct().ToList();
+        <article class="tutor-card">
+            <header class="tutor-card-cabeza">
+                <span class="avatar-iniciales avatar-grande" aria-hidden="true">@t.Iniciales</span>
+                <div class="tutor-card-nombre">
+                    <a asp-action="Details" asp-route-id="@t.Id" class="tutor-nombre-enlace">@t.Nombre</a>
+                    <div class="small text-muted">
+                        @if (zonas.Any()) { <span><i class="bi bi-geo-alt-fill"></i> @string.Join(", ", zonas)</span> }
+                        @if (t.Cumpleanos.HasValue) { <span class="ms-2"><i class="bi bi-cake2-fill"></i> @t.Cumpleanos.Value.DiaYMes()</span> }
+                        @if (!zonas.Any() && !t.Cumpleanos.HasValue) { <span>Sin zona ni cumpleaños</span> }
+                    </div>
+                </div>
+                <a asp-action="Edit" asp-route-id="@t.Id" class="btn btn-sm btn-outline-dark" aria-label="Editar a @t.Nombre"><i class="bi bi-pencil-fill"></i></a>
+            </header>
+
+            <div class="tutor-card-contacto">
+                @if (llamar != null)
                 {
-                    var wa = Ayudas.EnlaceWhatsApp(t.Telefono);
-                    var llamar = Ayudas.EnlaceLlamar(t.Telefono);
-                    var zonas = t.Caninos.Select(cx => cx.Canino.Distrito).Where(d => !string.IsNullOrEmpty(d)).Distinct().ToList();
-                    <tr>
-                        <td>
-                            <a asp-action="Details" asp-route-id="@t.Id" class="fw-bold enlace-suave">@t.Nombre</a>
-                            <div class="small">
-                                @if (llamar != null)
-                                {
-                                    <a href="@llamar" class="contacto-tel"><i class="bi bi-telephone-fill"></i> @t.Telefono</a>
-                                    @if (wa != null) { <a href="@wa" target="_blank" rel="noopener" class="chip chip-linea"><i class="bi bi-whatsapp"></i> WhatsApp</a> }
-                                }
-                                else { <span class="text-muted">Sin teléfono</span> }
-                            </div>
-                            <div class="small d-flex flex-wrap gap-1 mt-1"><partial name="_RedesTutor" model="t" /></div>
-                        </td>
-                        <td>@(t.Cumpleanos.HasValue ? t.Cumpleanos.Value.DiaYMes() : "—")</td>
-                        <td>@(zonas.Any() ? string.Join(", ", zonas) : "—")</td>
-                        <td>
-                            @if (!t.Caninos.Any()) { <span class="text-muted">Sin perros</span> }
-                            @foreach (var x in t.Caninos.OrderBy(ct => ct.Canino.Nombre))
-                            {
-                                var otros = x.Canino.Tutores.Where(o => o.TutorId != t.Id).Select(o => o.Tutor.Nombre).ToList();
-                                <div class="perro-linea">
-                                    <a asp-controller="Caninos" asp-action="Details" asp-route-id="@x.Canino.Id" class="perro-mini">
-                                        <img src="@x.Canino.FotoOPlaceholder" alt="" /> <span>@x.Canino.Nombre</span>
-                                    </a>
-                                    @if (otros.Any())
-                                    {
-                                        <span class="con-tutor"><i class="bi bi-people-fill"></i> con @string.Join(" y ", otros)</span>
-                                    }
-                                </div>
-                            }
-                        </td>
-                        <td class="text-end"><a asp-action="Edit" asp-route-id="@t.Id" class="btn btn-sm btn-outline-dark">Editar</a></td>
-                    </tr>
+                    <a href="@llamar" class="btn btn-sm btn-outline-dark"><i class="bi bi-telephone-fill"></i> @t.Telefono</a>
+                    @if (wa != null) { <a href="@wa" target="_blank" rel="noopener" class="btn btn-sm btn-azul"><i class="bi bi-whatsapp"></i> WhatsApp</a> }
                 }
-                </tbody>
-            </table>
-        </div>
+                else { <span class="text-muted small">Sin teléfono</span> }
+                <partial name="_RedesTutor" model="t" />
+            </div>
+
+            <div class="tutor-card-perros">
+                @if (!t.Caninos.Any()) { <span class="text-muted small">Sin perros asignados</span> }
+                @foreach (var x in t.Caninos.OrderBy(ct => ct.Canino.Nombre))
+                {
+                    var otros = x.Canino.Tutores.Where(o => o.TutorId != t.Id).Select(o => o.Tutor.Nombre).ToList();
+                    <a asp-controller="Caninos" asp-action="Details" asp-route-id="@x.Canino.Id" class="perro-chip" title="@(otros.Any() ? "Lo comparte con " + string.Join(" y ", otros) : "Único tutor")">
+                        <img src="@x.Canino.FotoOPlaceholder" alt="" loading="lazy" />
+                        <span>@x.Canino.Nombre@if (otros.Any()) { <small class="d-block"><i class="bi bi-people-fill"></i> con @string.Join(" y ", otros)</small> }</span>
+                    </a>
+                }
+            </div>
+        </article>
+    }
     </div>
 }

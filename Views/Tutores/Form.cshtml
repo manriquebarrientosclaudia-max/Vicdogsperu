@@ -7,57 +7,70 @@
     <h1 class="titulo">@(esNuevo ? "Nuevo tutor" : "Editar a " + Model.Nombre)</h1>
     <a asp-action="@(esNuevo ? "Index" : "Details")" asp-route-id="@(esNuevo ? (int?)null : Model.Id)" class="btn btn-outline-dark">Cancelar</a>
 </div>
-<form asp-action="@(esNuevo ? "Create" : "Edit")" asp-route-id="@(esNuevo ? (int?)null : Model.Id)" method="post" class="panel-caja mx-auto" style="max-width:720px">
-    <div class="row g-3">
-        <div class="col-12">
-            <label asp-for="Nombre" class="form-label"></label>
-            <input asp-for="Nombre" class="form-control" required />
-            <span asp-validation-for="Nombre" class="text-danger small"></span>
-        </div>
-        <div class="col-md-6">
-            <label asp-for="Telefono" class="form-label"></label>
-            <input asp-for="Telefono" class="form-control" inputmode="tel" />
-        </div>
-        <div class="col-md-6">
-            <label asp-for="Cumpleanos" class="form-label"></label>
-            <input asp-for="Cumpleanos" type="date" class="form-control" />
-            <div class="form-text">Solo se muestran el día y el mes. Si no sabes el año, pon uno cualquiera.</div>
-        </div>
-        <div class="col-12">
-            <label asp-for="Direccion" class="form-label"></label>
-            <input asp-for="Direccion" class="form-control" />
-        </div>
-        <div class="col-12">
-            <h2 class="h6 fw-bold mb-0 mt-2">Redes sociales</h2>
-            <div class="form-text mt-0">Opcionales. Puedes pegar el enlace completo del perfil o solo el usuario.</div>
-        </div>
-        <div class="col-md-4">
-            <label asp-for="Instagram" class="form-label"></label>
-            <div class="input-group">
-                <span class="input-group-text"><i class="bi bi-instagram"></i></span>
-                <input asp-for="Instagram" class="form-control" placeholder="@@usuario o enlace" />
+<form asp-action="@(esNuevo ? "Create" : "Edit")" asp-route-id="@(esNuevo ? (int?)null : Model.Id)" method="post" class="mx-auto" style="max-width:720px">
+    <section class="panel-caja mb-3">
+        <h2 class="titulo h5">Datos del tutor</h2>
+        <div class="row g-3">
+            <div class="col-12">
+                <label asp-for="Nombre" class="form-label"></label>
+                <input asp-for="Nombre" class="form-control" placeholder="Ej. Mirella Quispe" required autofocus />
+                <span asp-validation-for="Nombre" class="text-danger small"></span>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="Telefono" class="form-label"></label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-telephone-fill"></i></span>
+                    <input asp-for="Telefono" class="form-control" inputmode="tel" placeholder="Ej. 987 654 321" />
+                </div>
+                <div class="form-text">Con el número se activan los botones de llamar y WhatsApp.</div>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="Cumpleanos" class="form-label"></label>
+                <input asp-for="Cumpleanos" type="date" class="form-control" />
+                <div class="form-text">Solo se muestran el día y el mes. Si no sabes el año, pon uno cualquiera.</div>
+            </div>
+            <div class="col-12">
+                <label asp-for="Direccion" class="form-label"></label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-geo-alt-fill"></i></span>
+                    <input asp-for="Direccion" class="form-control" />
+                </div>
             </div>
         </div>
-        <div class="col-md-4">
-            <label asp-for="TikTok" class="form-label"></label>
-            <div class="input-group">
-                <span class="input-group-text"><i class="bi bi-tiktok"></i></span>
-                <input asp-for="TikTok" class="form-control" placeholder="@@usuario o enlace" />
+    </section>
+
+    <section class="panel-caja mb-3">
+        <h2 class="titulo h5 mb-1">Redes sociales</h2>
+        <p class="text-muted small">Opcionales. Puedes pegar el enlace completo del perfil o solo el usuario.</p>
+        <div class="row g-3">
+            <div class="col-md-4">
+                <label asp-for="Instagram" class="form-label"></label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-instagram"></i></span>
+                    <input asp-for="Instagram" class="form-control" placeholder="@@usuario o enlace" />
+                </div>
+            </div>
+            <div class="col-md-4">
+                <label asp-for="TikTok" class="form-label"></label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-tiktok"></i></span>
+                    <input asp-for="TikTok" class="form-control" placeholder="@@usuario o enlace" />
+                </div>
+            </div>
+            <div class="col-md-4">
+                <label asp-for="Facebook" class="form-label"></label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-facebook"></i></span>
+                    <input asp-for="Facebook" class="form-control" placeholder="usuario o enlace" />
+                </div>
             </div>
         </div>
-        <div class="col-md-4">
-            <label asp-for="Facebook" class="form-label"></label>
-            <div class="input-group">
-                <span class="input-group-text"><i class="bi bi-facebook"></i></span>
-                <input asp-for="Facebook" class="form-control" placeholder="usuario o enlace" />
-            </div>
-        </div>
-        <div class="col-12">
-            <label asp-for="Notas" class="form-label"></label>
-            <textarea asp-for="Notas" class="form-control" rows="3"></textarea>
-        </div>
-        <div class="col-12">
-            <button type="submit" class="btn btn-azul">@(esNuevo ? "Registrar tutor" : "Guardar cambios")</button>
-        </div>
-    </div>
+    </section>
+
+    <section class="panel-caja mb-3">
+        <h2 class="titulo h5">Notas</h2>
+        <textarea asp-for="Notas" class="form-control" rows="3" aria-label="Notas" placeholder="Ej. Prefiere que le escriban por WhatsApp, recoge a su perro a las 6 pm."></textarea>
+    </section>
+
+    <button type="submit" class="btn btn-azul btn-lg">@(esNuevo ? "Registrar tutor" : "Guardar cambios")</button>
 </form>

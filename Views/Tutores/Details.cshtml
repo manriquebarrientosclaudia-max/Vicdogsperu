@@ -3,44 +3,55 @@
     ViewData["Title"] = Model.Nombre;
     var wa = Ayudas.EnlaceWhatsApp(Model.Telefono);
     var llamar = Ayudas.EnlaceLlamar(Model.Telefono);
+    var enlIg = Ayudas.EnlaceRed(Model.Instagram, "instagram");
+    var enlTt = Ayudas.EnlaceRed(Model.TikTok, "tiktok");
+    var enlFb = Ayudas.EnlaceRed(Model.Facebook, "facebook");
 }
-<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+<div class="mb-3">
     <a asp-action="Index" class="enlace-suave"><i class="bi bi-arrow-left"></i> Volver a tutores</a>
-    <div class="d-flex gap-2">
-        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-azul"><i class="bi bi-pencil-fill"></i> Editar datos</a>
-        <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-outline-dark"><i class="bi bi-trash"></i> Eliminar</a>
-    </div>
 </div>
+
+<section class="tutor-hero mb-4">
+    <span class="avatar-hero" aria-hidden="true">@Model.Iniciales</span>
+    <div class="tutor-hero-texto">
+        <h1 class="titulo">@Model.Nombre</h1>
+        <p class="mb-0">
+            @Model.Caninos.Count @(Model.Caninos.Count == 1 ? "perro" : "perros")
+            @if (Model.Cumpleanos.HasValue) { <span> · <i class="bi bi-cake2-fill"></i> Cumple el @Model.Cumpleanos.Value.DiaYMes()</span> }
+        </p>
+    </div>
+    <div class="tutor-hero-acciones">
+        @if (llamar != null)
+        {
+            <a href="@llamar" class="btn btn-blanco"><i class="bi bi-telephone-fill"></i> Llamar</a>
+            @if (wa != null) { <a href="@wa" target="_blank" rel="noopener" class="btn btn-blanco"><i class="bi bi-whatsapp"></i> WhatsApp</a> }
+        }
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-blanco-linea"><i class="bi bi-pencil-fill"></i> Editar</a>
+        <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-blanco-linea" aria-label="Eliminar a @Model.Nombre"><i class="bi bi-trash"></i></a>
+    </div>
+</section>
+
 <div class="row g-4">
     <div class="col-lg-4">
-        <section class="panel-caja">
-            <h1 class="titulo h3">@Model.Nombre</h1>
-            <dl class="ficha una-columna">
-                <div><dt>Teléfono</dt>
-                    <dd>
-                        @if (llamar != null)
-                        {
-                            <a href="@llamar" class="contacto-tel">@Model.Telefono</a>
-                            @if (wa != null) { <a href="@wa" target="_blank" rel="noopener" class="chip chip-linea"><i class="bi bi-whatsapp"></i> WhatsApp</a> }
-                        }
-                        else { <span>—</span> }
-                    </dd></div>
-                <div><dt>Cumpleaños</dt><dd>@(Model.Cumpleanos.HasValue ? Model.Cumpleanos.Value.DiaYMes() : "—")</dd></div>
+        <section class="panel-caja mb-4">
+            <h2 class="titulo h5">Datos de contacto</h2>
+            <dl class="ficha una-columna mb-0">
+                <div><dt>Teléfono</dt><dd>@(llamar != null ? Model.Telefono : "—")</dd></div>
                 <div><dt>Dirección</dt><dd>@(string.IsNullOrEmpty(Model.Direccion) ? "—" : Model.Direccion)</dd></div>
+                <div><dt>Cumpleaños</dt><dd>@(Model.Cumpleanos.HasValue ? Model.Cumpleanos.Value.DiaYMes() : "—")</dd></div>
             </dl>
-            @{
-                var enlIg = Ayudas.EnlaceRed(Model.Instagram, "instagram");
-                var enlTt = Ayudas.EnlaceRed(Model.TikTok, "tiktok");
-                var enlFb = Ayudas.EnlaceRed(Model.Facebook, "facebook");
-            }
-            <h2 class="h6 fw-bold mt-3 mb-2">Redes sociales</h2>
+            @if (!string.IsNullOrEmpty(Model.Notas)) { <div class="nota"><strong>Notas:</strong> @Model.Notas</div> }
+        </section>
+
+        <section class="panel-caja">
+            <h2 class="titulo h5">Redes sociales</h2>
             @if (enlIg == null && enlTt == null && enlFb == null)
             {
-                <p class="vacio mb-3">Sin redes registradas. Agrégalas en «Editar datos».</p>
+                <p class="vacio mb-0">Sin redes registradas. Agrégalas en «Editar».</p>
             }
             else
             {
-                <div class="redes-lista mb-3">
+                <div class="redes-lista">
                     @foreach (var r in new[] {
                         (Enlace: enlIg, Icono: "bi-instagram", Nombre: "Instagram", Texto: Ayudas.TextoRed(Model.Instagram, "instagram")),
                         (Enlace: enlTt, Icono: "bi-tiktok", Nombre: "TikTok", Texto: Ayudas.TextoRed(Model.TikTok, "tiktok")),
@@ -55,13 +66,13 @@
                     }
                 </div>
             }
-            @if (!string.IsNullOrEmpty(Model.Notas)) { <div class="nota"><strong>Notas:</strong> @Model.Notas</div> }
         </section>
     </div>
+
     <div class="col-lg-8">
         <section class="panel-caja">
             <h2 class="titulo h4">@(Model.Caninos.Count == 1 ? "Perro" : "Perros")</h2>
-            @if (!Model.Caninos.Any()) { <p class="vacio mb-0">Este tutor no tiene perros asignados.</p> }
+            @if (!Model.Caninos.Any()) { <p class="vacio mb-0">Este tutor no tiene perros asignados. Asígnalo desde la ficha del perro.</p> }
             else
             {
                 @foreach (var x in Model.Caninos.OrderBy(ct => ct.Canino.Nombre))
