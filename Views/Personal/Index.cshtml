@@ -1,0 +1,52 @@
+@model List<Empleado>
+@{
+    ViewData["Title"] = "Personal";
+}
+<div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-3">
+    <div>
+        <h1 class="titulo">Personal</h1>
+        <p class="text-muted mb-0">Las personas que trabajan en Vicdogs. Solo quienes trabajan actualmente aparecen al tomar asistencia.</p>
+    </div>
+    <div class="d-flex flex-wrap gap-2">
+        <a asp-controller="Asistencias" asp-action="Index" class="btn btn-outline-dark"><i class="bi bi-calendar-check"></i> Tomar asistencia</a>
+        <a asp-action="Create" class="btn btn-azul"><i class="bi bi-plus-lg"></i> Agregar persona</a>
+    </div>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="panel-caja vacio">Todavía no hay personal registrado. Agrega a la primera persona para empezar a tomar asistencia.</div>
+}
+else
+{
+    <div class="panel-caja p-0">
+        <div class="table-responsive">
+            <table class="table align-middle tabla-vic mb-0">
+                <thead><tr><th>Nombre</th><th>Cargo</th><th>Teléfono</th><th>Estado</th><th></th></tr></thead>
+                <tbody>
+                @foreach (var e in Model)
+                {
+                    <tr class="@(e.Activo ? "" : "text-muted")">
+                        <td>
+                            <span class="persona persona-chica">
+                                <span class="avatar-iniciales" aria-hidden="true">@e.Iniciales</span>
+                                <strong>@e.Nombre</strong>
+                            </span>
+                        </td>
+                        <td>@(string.IsNullOrEmpty(e.Cargo) ? "—" : e.Cargo)</td>
+                        <td>@(string.IsNullOrEmpty(e.Telefono) ? "—" : e.Telefono)</td>
+                        <td>@if (e.Activo) { <span class="chip estado-ok">Trabaja actualmente</span> } else { <span class="chip chip-negro">Ya no trabaja</span> }</td>
+                        <td class="text-end text-nowrap">
+                            <a asp-action="Edit" asp-route-id="@e.Id" class="btn btn-sm btn-outline-dark">Editar</a>
+                            <form asp-action="Delete" asp-route-id="@e.Id" method="post" class="d-inline"
+                                  onsubmit="return confirm('¿Eliminar a @e.Nombre? También se borrarán todas sus asistencias. Si solo dejó de trabajar, mejor edítalo y desmarca «Trabaja actualmente».');">
+                                <button type="submit" class="btn btn-sm btn-link text-dark" aria-label="Eliminar a @e.Nombre"><i class="bi bi-trash"></i></button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}

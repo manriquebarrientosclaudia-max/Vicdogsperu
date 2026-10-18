@@ -1,0 +1,170 @@
+@model AsistenciaDiaVM
+@{
+    ViewData["Title"] = "Asistencia del personal";
+    var dia = Model.Fecha;
+    var esHoy = dia == DateTime.Today;
+    string[] diasSemana = { "domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado" };
+    string F(DateTime d) => d.ToString("yyyy-MM-dd");
+    var i = 0;
+}
+<div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-3">
+    <div>
+        <h1 class="titulo">Asistencia del personal</h1>
+        <p class="text-muted mb-0">Marca quién vino a trabajar y a qué hora. Puedes volver a cualquier día y corregirlo.</p>
+    </div>
+    <div class="d-flex flex-wrap gap-2">
+        <a asp-controller="Personal" asp-action="Index" class="btn btn-outline-dark"><i class="bi bi-person-badge"></i> Personal</a>
+        <a asp-action="Resumen" asp-route-mes="@dia.ToString("yyyy-MM")" class="btn btn-outline-dark"><i class="bi bi-calendar3"></i> Resumen del mes</a>
+    </div>
+</div>
+
+<section class="panel-caja selector-dia mb-3">
+    <div class="dia-nav">
+        <a class="btn btn-outline-dark btn-icono" asp-action="Index" asp-route-fecha="@F(dia.AddDays(-1))" aria-label="Día anterior"><i class="bi bi-chevron-left"></i></a>
+        <div class="dia-actual">
+            <span class="dia-semana">@diasSemana[(int)dia.DayOfWeek]</span>
+            <span class="dia-fecha">@dia.DiaYMes() @dia.Year</span>
+        </div>
+        <a class="btn btn-outline-dark btn-icono" asp-action="Index" asp-route-fecha="@F(dia.AddDays(1))" aria-label="Día siguiente"><i class="bi bi-chevron-right"></i></a>
+    </div>
+    <form method="get" asp-action="Index" class="row g-2 align-items-end dia-filtros">
+        <div class="col-7 col-md-auto">
+            <label class="form-label" for="fecha">Ir a otro día</label>
+            <input type="date" class="form-control" id="fecha" name="fecha" value="@F(dia)" />
+        </div>
+        <div class="col-5 col-md-auto d-flex gap-2">
+            <button type="submit" class="btn btn-dark">Ver</button>
+            @if (!esHoy)
+            {
+                <a class="btn btn-outline-dark" asp-action="Index">Hoy</a>
+            }
+        </div>
+    </form>
+</section>
+
+@if (!Model.Filas.Any())
+{
+    <div class="panel-caja vacio">
+        Todavía no hay personal registrado. <a asp-controller="Personal" asp-action="Create" class="enlace-suave">Agrega a la primera persona</a> para empezar a tomar asistencia.
+    </div>
+}
+else
+{
+    <div class="contadores mb-3">
+        <div class="contador c-presente"><strong id="n-presente">@Model.Presentes</strong><span>Asistieron</span></div>
+        <div class="contador c-falta"><strong id="n-falta">@Model.Faltas</strong><span>Faltaron</span></div>
+        <div class="contador c-permiso"><strong id="n-permiso">@Model.Permisos</strong><span>Con permiso</span></div>
+        <div class="contador c-sin"><strong id="n-sin">@Model.SinRegistrar</strong><span>Sin marcar</span></div>
+    </div>
+
+    <form asp-action="Guardar" method="post" id="form-asistencia">
+        <input type="hidden" name="fecha" value="@F(dia)" />
+
+        <div class="barra-acciones mb-2">
+            <button type="button" class="btn btn-sm btn-outline-dark" id="todos-presentes"><i class="bi bi-check2-all"></i> Marcar a todos como asistieron</button>
+            <button type="button" class="btn btn-sm btn-link text-dark" id="limpiar-todo">Quitar todas las marcas</button>
+        </div>
+
+        <ul class="lista-asistencia">
+        @foreach (var (e, reg) in Model.Filas)
+        {
+            var est = reg?.Estado;
+            var k = i; i++;
+            <li class="fila-asistencia @Asistencia.Clase(est)">
+                <input type="hidden" name="filas[@k].EmpleadoId" value="@e.Id" />
+                <div class="persona">
+                    <span class="avatar-iniciales" aria-hidden="true">@e.Iniciales</span>
+                    <span class="persona-datos">
+                        <strong>@e.Nombre</strong>
+                        <small class="text-muted">@(string.IsNullOrEmpty(e.Cargo) ? "Sin cargo" : e.Cargo)</small>
+                    </span>
+                </div>
+                <div class="segmento" role="radiogroup" aria-label="Asistencia de @e.Nombre">
+                    @foreach (var op in new[] { ("Presente", "Asistió", "seg-presente"), ("Falta", "Faltó", "seg-falta"), ("Permiso", "Permiso", "seg-permiso") })
+                    {
+                        <input type="radio" class="seg-input @op.Item3" name="filas[@k].Estado" id="e-@e.Id-@op.Item1" value="@op.Item1" checked="@(est == op.Item1)" />
+                        <label for="e-@e.Id-@op.Item1">@op.Item2</label>
+                    }
+                </div>
+                <div class="horas">
+                    <label class="hora">
+                        <span>Entrada</span>
+                        <input type="time" class="form-control form-control-sm" name="filas[@k].HoraEntrada" value="@(reg?.HoraEntrada != null ? reg.HoraEntrada.Value.ToString(@"hh\:mm") : "")" />
+                    </label>
+                    <label class="hora">
+                        <span>Salida</span>
+                        <input type="time" class="form-control form-control-sm" name="filas[@k].HoraSalida" value="@(reg?.HoraSalida != null ? reg.HoraSalida.Value.ToString(@"hh\:mm") : "")" />
+                    </label>
+                    <button type="button" class="btn btn-sm btn-outline-dark ahora" title="Poner la hora actual en la casilla vacía: primero entrada, luego salida"><i class="bi bi-clock"></i> Ahora</button>
+                </div>
+                <input type="text" class="form-control form-control-sm nota-asistencia" name="filas[@k].Nota" value="@reg?.Nota" maxlength="200" placeholder="Nota (opcional)" aria-label="Nota de @e.Nombre" />
+                <button type="button" class="btn btn-sm btn-link text-dark quitar-marca" title="Quitar marca" aria-label="Quitar marca de @e.Nombre"><i class="bi bi-x-lg"></i></button>
+            </li>
+        }
+        </ul>
+
+        <div class="barra-guardar">
+            <span class="text-muted small d-none d-sm-inline">Los cambios no se guardan hasta que pulses el botón.</span>
+            <button type="submit" class="btn btn-azul btn-lg"><i class="bi bi-check-lg"></i> Guardar asistencia</button>
+        </div>
+    </form>
+}
+
+@section Scripts {
+<script>
+(function () {
+    var form = document.getElementById('form-asistencia');
+    if (!form) return;
+    var filas = Array.prototype.slice.call(form.querySelectorAll('.fila-asistencia'));
+    var clases = { Presente: 'as-presente', Falta: 'as-falta', Permiso: 'as-permiso' };
+
+    function estadoDe(f) { var r = f.querySelector('.seg-input:checked'); return r ? r.value : ''; }
+    function refrescar() {
+        var n = { Presente: 0, Falta: 0, Permiso: 0, sin: 0 };
+        filas.forEach(function (f) {
+            var e = estadoDe(f);
+            f.classList.remove('as-presente', 'as-falta', 'as-permiso', 'as-sin');
+            f.classList.add(clases[e] || 'as-sin');
+            if (e) n[e]++; else n.sin++;
+        });
+        document.getElementById('n-presente').textContent = n.Presente;
+        document.getElementById('n-falta').textContent = n.Falta;
+        document.getElementById('n-permiso').textContent = n.Permiso;
+        document.getElementById('n-sin').textContent = n.sin;
+    }
+    function horaActual() {
+        var d = new Date();
+        return ('0' + d.getHours()).slice(-2) + ':' + ('0' + d.getMinutes()).slice(-2);
+    }
+    form.addEventListener('change', function (e) { if (e.target.classList.contains('seg-input')) refrescar(); });
+    form.addEventListener('click', function (e) {
+        var q = e.target.closest('.quitar-marca');
+        if (q) {
+            var fila = q.closest('.fila-asistencia');
+            fila.querySelectorAll('.seg-input').forEach(function (r) { r.checked = false; });
+            fila.querySelectorAll('input[type=time]').forEach(function (t) { t.value = ''; });
+            refrescar();
+            return;
+        }
+        var a = e.target.closest('.ahora');
+        if (a) {
+            var f = a.closest('.fila-asistencia');
+            f.querySelector('.seg-presente').checked = true;
+            var horas = f.querySelectorAll('input[type=time]');
+            if (!horas[0].value) horas[0].value = horaActual();
+            else horas[1].value = horaActual();
+            refrescar();
+        }
+    });
+    document.getElementById('todos-presentes').addEventListener('click', function () {
+        filas.forEach(function (f) { f.querySelector('.seg-presente').checked = true; });
+        refrescar();
+    });
+    document.getElementById('limpiar-todo').addEventListener('click', function () {
+        form.querySelectorAll('.seg-input').forEach(function (r) { r.checked = false; });
+        refrescar();
+    });
+    refrescar();
+})();
+</script>
+}

@@ -42,6 +42,10 @@ public class DashboardVM
     public int SinTutor { get; set; }
     public int SinPeso { get; set; }
     public int SinFechaVacuna { get; set; }
+    public int PersonalActivo { get; set; }
+    public int AsistHoy { get; set; }
+    public int FaltasHoy { get; set; }
+    public int PermisosHoy { get; set; }
 }
 
 public class HomeController : Controller
@@ -69,6 +73,13 @@ public class HomeController : Controller
             SinPeso = caninos.Count(c => c.PesoKg == null),
             SinFechaVacuna = caninos.Count(c => !c.Vacunas.Any(v => v.Vencimiento != null))
         };
+
+        vm.PersonalActivo = await _db.Empleados.CountAsync(e => e.Activo);
+        var asistHoy = await _db.Asistencias.Where(a => a.Fecha == hoy && a.Empleado.Activo).GroupBy(a => a.Estado)
+            .Select(g => new { Estado = g.Key, N = g.Count() }).ToListAsync();
+        vm.AsistHoy = asistHoy.FirstOrDefault(x => x.Estado == Asistencia.Presente)?.N ?? 0;
+        vm.FaltasHoy = asistHoy.FirstOrDefault(x => x.Estado == Asistencia.Falta)?.N ?? 0;
+        vm.PermisosHoy = asistHoy.FirstOrDefault(x => x.Estado == Asistencia.Permiso)?.N ?? 0;
 
         foreach (var c in caninos)
         {

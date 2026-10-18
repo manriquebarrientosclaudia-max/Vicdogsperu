@@ -17,6 +17,8 @@ public class AppDbContext : DbContext
     public DbSet<Desparasitacion> Desparasitaciones { get; set; }
     public DbSet<Recordatorio> Recordatorios { get; set; }
     public DbSet<PesoRegistro> Pesos { get; set; }
+    public DbSet<Empleado> Empleados { get; set; }
+    public DbSet<Asistencia> Asistencias { get; set; }
 
     protected override void OnModelCreating(ModelBuilder mb)
     {
@@ -40,6 +42,10 @@ public class AppDbContext : DbContext
         mb.Entity<PesoRegistro>().Property(p => p.PesoKg).HasPrecision(6, 2);
         mb.Entity<PesoRegistro>().HasOne(p => p.Canino).WithMany(c => c.Pesos)
             .HasForeignKey(p => p.CaninoId).OnDelete(DeleteBehavior.Cascade);
+        mb.Entity<Asistencia>().Property(a => a.Fecha).HasColumnType("date");
+        mb.Entity<Asistencia>().HasIndex(a => new { a.EmpleadoId, a.Fecha }).IsUnique();
+        mb.Entity<Asistencia>().HasOne(a => a.Empleado).WithMany(e => e.Asistencias)
+            .HasForeignKey(a => a.EmpleadoId).OnDelete(DeleteBehavior.Cascade);
         mb.Entity<Desparasitacion>().HasOne(d => d.Canino).WithMany(c => c.Desparasitaciones)
             .HasForeignKey(d => d.CaninoId).OnDelete(DeleteBehavior.Cascade);
     }

@@ -1,0 +1,112 @@
+@model AsistenciaMesVM
+@{
+    ViewData["Title"] = "Resumen de asistencia del personal";
+    var mes = Model.Mes;
+    string[] meses = { "enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre" };
+    string[] inicial = { "D", "L", "M", "M", "J", "V", "S" };
+    var hoy = DateTime.Today;
+    var totalP = Model.Filas.Sum(f => f.Presentes);
+    var totalF = Model.Filas.Sum(f => f.Faltas);
+    var totalPe = Model.Filas.Sum(f => f.Permisos);
+    var totalReg = totalP + totalF + totalPe;
+}
+<div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-3">
+    <div>
+        <h1 class="titulo">Resumen de asistencia</h1>
+        <p class="text-muted mb-0">Cada fila es una persona y cada columna un día del mes. Pulsa un día para corregirlo.</p>
+    </div>
+    <div class="d-flex flex-wrap gap-2">
+        <a asp-action="ExportarMes" asp-route-mes="@mes.ToString("yyyy-MM")" class="btn btn-outline-dark"><i class="bi bi-file-earmark-excel"></i> Exportar a Excel</a>
+        <a asp-action="Index" class="btn btn-azul"><i class="bi bi-calendar-check"></i> Marcar asistencia de hoy</a>
+    </div>
+</div>
+
+<section class="panel-caja selector-dia mb-3">
+    <div class="dia-nav">
+        <a class="btn btn-outline-dark btn-icono" asp-action="Resumen" asp-route-mes="@mes.AddMonths(-1).ToString("yyyy-MM")" aria-label="Mes anterior"><i class="bi bi-chevron-left"></i></a>
+        <div class="dia-actual">
+            <span class="dia-semana">@mes.Year</span>
+            <span class="dia-fecha">@meses[mes.Month - 1]</span>
+        </div>
+        <a class="btn btn-outline-dark btn-icono" asp-action="Resumen" asp-route-mes="@mes.AddMonths(1).ToString("yyyy-MM")" aria-label="Mes siguiente"><i class="bi bi-chevron-right"></i></a>
+    </div>
+    <form method="get" asp-action="Resumen" class="row g-2 align-items-end dia-filtros">
+        <div class="col-7 col-md-auto">
+            <label class="form-label" for="mes">Mes</label>
+            <input type="month" class="form-control" id="mes" name="mes" value="@mes.ToString("yyyy-MM")" />
+        </div>
+        <div class="col-5 col-md-auto"><button type="submit" class="btn btn-dark">Ver</button></div>
+    </form>
+</section>
+
+<div class="contadores mb-3">
+    <div class="contador c-presente"><strong>@totalP</strong><span>Asistencias</span></div>
+    <div class="contador c-falta"><strong>@totalF</strong><span>Faltas</span></div>
+    <div class="contador c-permiso"><strong>@totalPe</strong><span>Permisos</span></div>
+    <div class="contador c-sin"><strong>@(totalReg == 0 ? "—" : (100 * totalP / totalReg) + "%")</strong><span>Asistencia general</span></div>
+</div>
+
+@if (!Model.Filas.Any())
+{
+    <div class="panel-caja vacio">Todavía no hay personal registrado. <a asp-controller="Personal" asp-action="Create" class="enlace-suave">Agrega a la primera persona</a>.</div>
+}
+else
+{
+    <div class="panel-caja p-0">
+        <div class="table-responsive tabla-mes-envoltorio">
+            <table class="tabla-mes">
+                <thead>
+                    <tr>
+                        <th class="col-perro">Personal</th>
+                        @for (var d = 1; d <= Model.DiasEnMes; d++)
+                        {
+                            var f = new DateTime(mes.Year, mes.Month, d);
+                            var finde = f.DayOfWeek == DayOfWeek.Saturday || f.DayOfWeek == DayOfWeek.Sunday;
+                            <th class="col-dia @(finde ? "finde" : "") @(f == hoy ? "hoy" : "")"><span class="inicial">@inicial[(int)f.DayOfWeek]</span>@d</th>
+                        }
+                        <th class="col-total" title="Días que asistió">A</th>
+                        <th class="col-total" title="Faltas">F</th>
+                        <th class="col-total" title="Permisos">P</th>
+                        <th class="col-total">%</th>
+                        <th class="col-total" title="Horas trabajadas (con entrada y salida)">Hrs</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @foreach (var fila in Model.Filas)
+                {
+                    <tr>
+                        <th class="col-perro">
+                            <span class="persona persona-chica">
+                                <span class="avatar-iniciales" aria-hidden="true">@fila.Empleado.Iniciales</span>
+                                <span class="persona-datos"><strong>@fila.Empleado.Nombre</strong>@if (!string.IsNullOrEmpty(fila.Empleado.Cargo)) { <small class="text-muted">@fila.Empleado.Cargo</small> }</span>
+                            </span>
+                        </th>
+                        @for (var d = 1; d <= Model.DiasEnMes; d++)
+                        {
+                            var f = new DateTime(mes.Year, mes.Month, d);
+                            var finde = f.DayOfWeek == DayOfWeek.Saturday || f.DayOfWeek == DayOfWeek.Sunday;
+                            fila.PorDia.TryGetValue(d, out var a);
+                            var tit = fila.Empleado.Nombre + " · " + f.ToString("dd/MM") + (a == null ? "" : " · " + a.Estado + (string.IsNullOrEmpty(a.Horario) ? "" : " · " + a.Horario) + (string.IsNullOrEmpty(a.Nota) ? "" : " · " + a.Nota));
+                            <td class="@(finde ? "finde" : "")">
+                                <a asp-action="Index" asp-route-fecha="@f.ToString("yyyy-MM-dd")"
+                                   class="celda @Asistencia.Clase(a?.Estado)" title="@tit">@Asistencia.Letra(a?.Estado)</a>
+                            </td>
+                        }
+                        <td class="col-total"><strong>@fila.Presentes</strong></td>
+                        <td class="col-total">@fila.Faltas</td>
+                        <td class="col-total">@fila.Permisos</td>
+                        <td class="col-total">@(fila.Porcentaje == null ? "—" : fila.Porcentaje + "%")</td>
+                        <td class="col-total">@(fila.Horas > 0 ? fila.Horas.ToString("0.#") : "—")</td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <p class="leyenda-asistencia mt-3">
+        <span><span class="celda as-presente">A</span> Asistió</span>
+        <span><span class="celda as-falta">F</span> Faltó</span>
+        <span><span class="celda as-permiso">P</span> Permiso</span>
+        <span class="text-muted">El porcentaje cuenta solo los días que tienen marca.</span>
+    </p>
+}

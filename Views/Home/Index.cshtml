@@ -7,9 +7,35 @@
 <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
     <div>
         <h1 class="titulo">Panel</h1>
-        <p class="text-muted mb-0">@Model.TotalActivos perros activos y @Model.TotalTutores tutores registrados.</p>
+        <p class="text-muted mb-0">Lo que necesita tu atención hoy, @DateTime.Today.DiaYMes().</p>
     </div>
-    <a asp-controller="Caninos" asp-action="Create" class="btn btn-azul"><i class="bi bi-plus-lg"></i> Nuevo perro</a>
+    <div class="d-flex flex-wrap gap-2">
+        <a asp-controller="Asistencias" asp-action="Index" class="btn btn-outline-dark"><i class="bi bi-calendar-check"></i> Asistencia del personal</a>
+        <a asp-controller="Caninos" asp-action="Create" class="btn btn-azul"><i class="bi bi-plus-lg"></i> Nuevo perro</a>
+    </div>
+</div>
+
+<div class="resumen-tiles mb-4">
+    <a asp-controller="Caninos" asp-action="Index" class="tile">
+        <span class="tile-icono"><i class="bi bi-heart-fill"></i></span>
+        <span class="tile-dato">@Model.TotalActivos</span>
+        <span class="tile-texto">Perros activos</span>
+    </a>
+    <a asp-controller="Tutores" asp-action="Index" class="tile">
+        <span class="tile-icono"><i class="bi bi-people-fill"></i></span>
+        <span class="tile-dato">@Model.TotalTutores</span>
+        <span class="tile-texto">Tutores</span>
+    </a>
+    <a asp-controller="Asistencias" asp-action="Index" class="tile tile-azul">
+        <span class="tile-icono"><i class="bi bi-person-check-fill"></i></span>
+        <span class="tile-dato">@Model.AsistHoy<small class="tile-de"> / @Model.PersonalActivo</small></span>
+        <span class="tile-texto">Personal presente hoy@(Model.FaltasHoy + Model.PermisosHoy > 0 ? " · " + (Model.FaltasHoy + Model.PermisosHoy) + " ausentes" : "")</span>
+    </a>
+    <a href="#salud" class="tile tile-negro">
+        <span class="tile-icono"><i class="bi bi-exclamation-lg"></i></span>
+        <span class="tile-dato">@Model.Alertas.Count</span>
+        <span class="tile-texto">Avisos de salud</span>
+    </a>
 </div>
 
 <div class="row g-4">
@@ -81,7 +107,7 @@
             }
         </section>
 
-        <section class="panel-caja">
+        <section class="panel-caja" id="salud">
             <h2 class="titulo h4">Salud que requiere atención</h2>
             <p class="text-muted small">Vacunas vencidas o que vencen en 30 días, y desparasitaciones que se repiten cada 3 meses.</p>
             @if (!Model.Alertas.Any())
