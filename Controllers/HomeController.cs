@@ -103,7 +103,7 @@ public class HomeController : Controller
         vm.Alertas = vm.Alertas.OrderBy(a => a.Dias).ThenBy(a => a.Canino.Nombre).ToList();
 
         // Recordatorios: avisan desde N días antes y siguen apareciendo hasta marcarlos como hechos (7 días)
-        var recordatorios = await _db.Recordatorios.Where(r => r.Activo).ToListAsync();
+        var recordatorios = await _db.Recordatorios.Where(r => r.Activo).Include(r => r.Canino).Include(r => r.Tutor).Include(r => r.Empleado).ToListAsync();
         foreach (var r in recordatorios)
         {
             var ant = r.Anterior(hoy);

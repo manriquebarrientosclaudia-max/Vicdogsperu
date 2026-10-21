@@ -35,6 +35,33 @@ public static class DbInitializer
             );
             CREATE UNIQUE INDEX IF NOT EXISTS ""IX_Asistencias_EmpleadoId_Fecha"" ON ""Asistencias"" (""EmpleadoId"", ""Fecha"");");
 
+        // Citas y avisos por WhatsApp: columnas nuevas de Recordatorios (la tabla ya existe en producción)
+        await db.Database.ExecuteSqlRawAsync(@"
+            ALTER TABLE ""Recordatorios"" ADD COLUMN IF NOT EXISTS ""Tipo"" varchar(10) NOT NULL DEFAULT 'Pago';
+            ALTER TABLE ""Recordatorios"" ADD COLUMN IF NOT EXISTS ""Hora"" time NULL;
+            ALTER TABLE ""Recordatorios"" ADD COLUMN IF NOT EXISTS ""CaninoId"" integer NULL;
+            ALTER TABLE ""Recordatorios"" ADD COLUMN IF NOT EXISTS ""TutorId"" integer NULL;
+            ALTER TABLE ""Recordatorios"" ADD COLUMN IF NOT EXISTS ""AvisarWhatsApp"" boolean NOT NULL DEFAULT FALSE;
+            ALTER TABLE ""Recordatorios"" ADD COLUMN IF NOT EXISTS ""EmpleadoId"" integer NULL;
+            ALTER TABLE ""Recordatorios"" ADD COLUMN IF NOT EXISTS ""AvisarInstructorWhatsApp"" boolean NOT NULL DEFAULT FALSE;
+            ALTER TABLE ""Recordatorios"" DROP COLUMN IF EXISTS ""AvisarTutorWhatsApp"";
+            ALTER TABLE ""Recordatorios"" ADD COLUMN IF NOT EXISTS ""Aviso1DiaFecha"" timestamp NULL;
+            ALTER TABLE ""Recordatorios"" ADD COLUMN IF NOT EXISTS ""Aviso3HorasFecha"" timestamp NULL;
+            CREATE INDEX IF NOT EXISTS ""IX_Recordatorios_CaninoId"" ON ""Recordatorios"" (""CaninoId"");
+            CREATE INDEX IF NOT EXISTS ""IX_Recordatorios_TutorId"" ON ""Recordatorios"" (""TutorId"");
+            CREATE INDEX IF NOT EXISTS ""IX_Recordatorios_EmpleadoId"" ON ""Recordatorios"" (""EmpleadoId"");
+            DO $$ BEGIN
+              IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'FK_Recordatorios_Caninos_CaninoId') THEN
+                ALTER TABLE ""Recordatorios"" ADD CONSTRAINT ""FK_Recordatorios_Caninos_CaninoId"" FOREIGN KEY (""CaninoId"") REFERENCES ""Caninos"" (""Id"") ON DELETE SET NULL;
+              END IF;
+              IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'FK_Recordatorios_Empleados_EmpleadoId') THEN
+                ALTER TABLE ""Recordatorios"" ADD CONSTRAINT ""FK_Recordatorios_Empleados_EmpleadoId"" FOREIGN KEY (""EmpleadoId"") REFERENCES ""Empleados"" (""Id"") ON DELETE SET NULL;
+              END IF;
+              IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'FK_Recordatorios_Tutores_TutorId') THEN
+                ALTER TABLE ""Recordatorios"" ADD CONSTRAINT ""FK_Recordatorios_Tutores_TutorId"" FOREIGN KEY (""TutorId"") REFERENCES ""Tutores"" (""Id"") ON DELETE SET NULL;
+              END IF;
+            END $$;");
+
         // Datos migrados de la versión anterior: la vacuna «Rabia» pasa a llamarse «Séxtuple»
         await db.Database.ExecuteSqlRawAsync("UPDATE \"Vacunas\" SET \"Tipo\" = 'Séxtuple' WHERE \"Tipo\" = 'Rabia'");
 

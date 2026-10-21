@@ -83,6 +83,14 @@ public static class Ayudas
     // ----- Contacto de tutores -----
     private static string Digitos(string tel) => new string((tel ?? "").Where(c => char.IsDigit(c)).ToArray());
 
+    /// <summary>Número listo para la API de WhatsApp (solo dígitos, con 51 si es celular peruano) o null.</summary>
+    public static string TelefonoWhatsApp(string telefono)
+    {
+        var d = Digitos(telefono);
+        if (d.Length == 9 && d.StartsWith("9")) d = "51" + d;
+        return d.Length >= 10 ? d : null;
+    }
+
     public static string EnlaceWhatsApp(string telefono)
     {
         var d = Digitos(telefono);

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
 using VicdogsPeru.Data;
+using VicdogsPeru.Services;
 
 // Las fechas del proyecto son DateTime "locales" (DateTime.Today / Now): Npgsql las guarda como
 // "timestamp without time zone" en vez de exigir UTC.
@@ -42,6 +43,11 @@ if (!string.IsNullOrEmpty(dbHost))
 }
 
 builder.Services.AddDbContext<AppDbContext>(o => o.UseNpgsql(connectionString));
+
+// ---- Avisos por WhatsApp (1 día y 3 horas antes de cada cita) ----
+builder.Services.AddHttpClient<IWhatsAppSender, WhatsAppCloudSender>(c => c.Timeout = TimeSpan.FromSeconds(20));
+builder.Services.AddScoped<AvisosWhatsApp>();
+builder.Services.AddHostedService<AvisosWhatsAppFondo>();
 
 // ---- Render termina el HTTPS y reenvía por HTTP: hay que confiar en sus cabeceras ----
 builder.Services.Configure<ForwardedHeadersOptions>(o =>

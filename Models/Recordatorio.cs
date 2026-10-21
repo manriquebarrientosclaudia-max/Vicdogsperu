@@ -42,6 +42,61 @@ public class Recordatorio
     /// <summary>Fecha de la ocurrencia que ya se marcó como hecha.</summary>
     public DateTime? HechoFecha { get; set; }
 
+    // ---------- Citas y avisos por WhatsApp ----------
+
+    public const string TipoPago = "Pago";
+    public const string TipoCita = "Cita";
+
+    /// <summary>Pago (servicios, trámites…) o Cita (con hora, perro y tutor).</summary>
+    [Required, StringLength(10)]
+    [Display(Name = "Tipo")]
+    public string Tipo { get; set; } = TipoPago;
+
+    /// <summary>Hora de la cita (obligatoria en las citas). Con hora, los avisos salen 1 día y 3 horas antes.</summary>
+    [Display(Name = "Hora")]
+    public TimeSpan? Hora { get; set; }
+
+    [Display(Name = "Perro")]
+    public int? CaninoId { get; set; }
+    public Canino Canino { get; set; }
+
+    [Display(Name = "Tutor (dueño del perro)")]
+    public int? TutorId { get; set; }
+    public Tutor Tutor { get; set; }
+
+    /// <summary>Instructor que dará la clase o atenderá la cita (del módulo Personal).</summary>
+    [Display(Name = "Instructor")]
+    public int? EmpleadoId { get; set; }
+    public Empleado Empleado { get; set; }
+
+    [Display(Name = "Avisarme por WhatsApp")]
+    public bool AvisarWhatsApp { get; set; }
+
+    [Display(Name = "Avisar al instructor por WhatsApp")]
+    public bool AvisarInstructorWhatsApp { get; set; }
+
+    /// <summary>Fecha de la ocurrencia para la que ya se envió el aviso de «1 día antes».</summary>
+    public DateTime? Aviso1DiaFecha { get; set; }
+
+    /// <summary>Fecha de la ocurrencia para la que ya se envió el aviso de «3 horas antes».</summary>
+    public DateTime? Aviso3HorasFecha { get; set; }
+
+    [NotMapped]
+    public bool EsCita => Tipo == TipoCita;
+
+    [NotMapped]
+    public string HoraTexto => Hora.HasValue ? DateTime.Today.Add(Hora.Value).ToString("h:mm tt", System.Globalization.CultureInfo.InvariantCulture).ToLowerInvariant() : null;
+
+    /// <summary>Próxima ocurrencia con su hora que todavía no ha pasado (sin hora: a las 9:00 am).</summary>
+    public DateTime? ProximaOcurrencia(DateTime ahora)
+    {
+        var hora = Hora ?? TimeSpan.FromHours(9);
+        var f = Proxima(ahora.Date);
+        if (f.HasValue && f.Value.Add(hora) < ahora)
+            f = Proxima(ahora.Date.AddDays(1));
+        return f?.Add(hora);
+    }
+
     public static readonly string[] Dias = { "domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado" };
 
     [NotMapped]

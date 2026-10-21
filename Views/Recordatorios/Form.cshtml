@@ -1,18 +1,31 @@
 @model Recordatorio
 @{
     var esNuevo = Model.Id == 0;
-    ViewData["Title"] = esNuevo ? "Nuevo recordatorio" : "Editar recordatorio";
+    var queEs = Model.EsCita ? "cita" : "recordatorio";
+    var titulo = esNuevo ? (Model.EsCita ? "Nueva cita" : "Nuevo recordatorio") : "Editar " + queEs;
+    ViewData["Title"] = titulo;
+    var tutores = (List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>)ViewBag.Tutores ?? new();
+    var instructores = (List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>)ViewBag.Instructores ?? new();
+    var caninos = (List<CaninoOpcion>)ViewBag.Caninos ?? new();
 }
 <div class="d-flex justify-content-between align-items-end mb-3">
-    <h1 class="titulo">@(esNuevo ? "Nuevo recordatorio" : "Editar recordatorio")</h1>
+    <h1 class="titulo">@titulo</h1>
     <a asp-action="Index" class="btn btn-outline-dark">Cancelar</a>
 </div>
 
 <form asp-action="@(esNuevo ? "Create" : "Edit")" asp-route-id="@(esNuevo ? (int?)null : Model.Id)" method="post" class="panel-caja mx-auto" style="max-width:720px">
     <div class="row g-3">
         <div class="col-12">
+            <label asp-for="Tipo" class="form-label"></label>
+            <select asp-for="Tipo" class="form-select" id="tipo">
+                <option value="Pago">Pago o recordatorio (internet, luz, trámites…)</option>
+                <option value="Cita">Cita (con hora, perro y tutor)</option>
+            </select>
+        </div>
+
+        <div class="col-12">
             <label asp-for="Titulo" class="form-label"></label>
-            <input asp-for="Titulo" class="form-control" placeholder="Ej. Pagar el internet" required />
+            <input asp-for="Titulo" class="form-control" id="titulo-campo" placeholder="Ej. Pagar el internet" required />
             <span asp-validation-for="Titulo" class="text-danger small"></span>
         </div>
 
@@ -52,6 +65,50 @@
         </div>
 
         <div class="col-md-6">
+            <label asp-for="Hora" class="form-label"></label>
+            <input type="time" id="Hora" name="Hora" class="form-control" value="@(Model.Hora.HasValue ? Model.Hora.Value.ToString(@"hh\:mm") : "")" />
+            <span asp-validation-for="Hora" class="text-danger small"></span>
+            <div class="form-text">Obligatoria en las citas. Con hora, el WhatsApp sale 1 día y 3 horas antes.</div>
+        </div>
+
+        <div class="col-12 solo-cita">
+            <label asp-for="EmpleadoId" class="form-label"></label>
+            <select asp-for="EmpleadoId" class="form-select">
+                <option value="">— Elige al instructor —</option>
+                @foreach (var i in instructores)
+                {
+                    <option value="@i.Value">@i.Text</option>
+                }
+            </select>
+            <span asp-validation-for="EmpleadoId" class="text-danger small"></span>
+            <div class="form-text">La lista sale de <a asp-controller="Personal" asp-action="Index">Personal</a>. Necesita tener su teléfono para recibir el WhatsApp.</div>
+        </div>
+
+        <div class="col-md-6 solo-cita">
+            <label asp-for="CaninoId" class="form-label"></label>
+            <select asp-for="CaninoId" class="form-select" id="perro">
+                <option value="">— Sin perro —</option>
+                @foreach (var c in caninos)
+                {
+                    <option value="@c.Id" data-tutor="@c.TutorId">@c.Nombre</option>
+                }
+            </select>
+        </div>
+
+        <div class="col-md-6 solo-cita">
+            <label asp-for="TutorId" class="form-label"></label>
+            <select asp-for="TutorId" class="form-select" id="tutor">
+                <option value="">— Sin tutor —</option>
+                @foreach (var t in tutores)
+                {
+                    <option value="@t.Value">@t.Text</option>
+                }
+            </select>
+            <span asp-validation-for="TutorId" class="text-danger small"></span>
+            <div class="form-text">Su teléfono y dirección van en el aviso al instructor.</div>
+        </div>
+
+        <div class="col-md-6">
             <label asp-for="AvisarDiasAntes" class="form-label"></label>
             <select asp-for="AvisarDiasAntes" class="form-select">
                 <option value="0">El mismo día</option>
@@ -68,6 +125,21 @@
         </div>
 
         <div class="col-12">
+            <div class="caja-whatsapp p-3 rounded-3 border">
+                <div class="fw-bold mb-2"><i class="bi bi-whatsapp"></i> Avisos por WhatsApp</div>
+                <div class="form-check form-switch mb-1">
+                    <input asp-for="AvisarWhatsApp" class="form-check-input" />
+                    <label asp-for="AvisarWhatsApp" class="form-check-label"></label>
+                </div>
+                <div class="form-check form-switch mb-1 solo-cita">
+                    <input asp-for="AvisarInstructorWhatsApp" class="form-check-input" />
+                    <label asp-for="AvisarInstructorWhatsApp" class="form-check-label"></label>
+                </div>
+                <div class="form-text">Se envía <strong>1 día antes</strong> y <strong>3 horas antes</strong> de la hora indicada. Si no pones hora (un pago), solo sale el aviso de 1 día antes, a las 9:00 am.</div>
+            </div>
+        </div>
+
+        <div class="col-12">
             <div class="form-check form-switch">
                 <input asp-for="Activo" class="form-check-input" />
                 <label asp-for="Activo" class="form-check-label">Recordatorio activo</label>
@@ -76,7 +148,7 @@
         </div>
 
         <div class="col-12">
-            <button type="submit" class="btn btn-azul">@(esNuevo ? "Guardar recordatorio" : "Guardar cambios")</button>
+            <button type="submit" class="btn btn-azul">@(esNuevo ? "Guardar " + queEs : "Guardar cambios")</button>
         </div>
     </div>
 </form>
@@ -93,6 +165,26 @@
         }
         sel.addEventListener('change', actualizar);
         actualizar();
+
+        // Pago o cita: muestra u oculta perro, tutor y aviso al tutor
+        var tipo = document.getElementById('tipo');
+        var titulo = document.getElementById('titulo-campo');
+        function porTipo() {
+            var cita = tipo.value === 'Cita';
+            document.querySelectorAll('.solo-cita').forEach(function (g) { g.style.display = cita ? '' : 'none'; });
+            titulo.placeholder = cita ? 'Ej. Baño y corte, Vacuna, Consulta' : 'Ej. Pagar el internet';
+            document.getElementById('Hora').required = cita;
+        }
+        tipo.addEventListener('change', porTipo);
+        porTipo();
+
+        // Al elegir el perro, propone a su tutor (si todavía no hay uno elegido)
+        var perro = document.getElementById('perro');
+        var tutor = document.getElementById('tutor');
+        perro.addEventListener('change', function () {
+            var t = perro.options[perro.selectedIndex].getAttribute('data-tutor');
+            if (t && !tutor.value) tutor.value = t;
+        });
     })();
 </script>
 }

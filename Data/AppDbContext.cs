@@ -46,6 +46,12 @@ public class AppDbContext : DbContext
         mb.Entity<Asistencia>().HasIndex(a => new { a.EmpleadoId, a.Fecha }).IsUnique();
         mb.Entity<Asistencia>().HasOne(a => a.Empleado).WithMany(e => e.Asistencias)
             .HasForeignKey(a => a.EmpleadoId).OnDelete(DeleteBehavior.Cascade);
+        mb.Entity<Recordatorio>().HasOne(r => r.Canino).WithMany()
+            .HasForeignKey(r => r.CaninoId).OnDelete(DeleteBehavior.SetNull);
+        mb.Entity<Recordatorio>().HasOne(r => r.Tutor).WithMany()
+            .HasForeignKey(r => r.TutorId).OnDelete(DeleteBehavior.SetNull);
+        mb.Entity<Recordatorio>().HasOne(r => r.Empleado).WithMany()
+            .HasForeignKey(r => r.EmpleadoId).OnDelete(DeleteBehavior.SetNull);
         mb.Entity<Desparasitacion>().HasOne(d => d.Canino).WithMany(c => c.Desparasitaciones)
             .HasForeignKey(d => d.CaninoId).OnDelete(DeleteBehavior.Cascade);
     }

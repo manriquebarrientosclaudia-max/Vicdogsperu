@@ -6,21 +6,27 @@
 <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-3">
     <div>
         <h1 class="titulo">Recordatorios</h1>
-        <p class="text-muted mb-0">Fechas que no debes olvidar. Aparecen en el panel desde el día que elijas antes.</p>
+        <p class="text-muted mb-0">Pagos y citas que no debes olvidar. Aparecen en el panel y, si lo activas, te llegan por WhatsApp 1 día y 3 horas antes.</p>
     </div>
-    <a asp-action="Create" class="btn btn-azul"><i class="bi bi-plus-lg"></i> Nuevo recordatorio</a>
+    <div class="d-flex flex-wrap gap-2">
+        <form asp-action="ProbarWhatsApp" method="post" class="d-inline">
+            <button type="submit" class="btn btn-outline-dark" title="Te envía un mensaje de prueba"><i class="bi bi-whatsapp"></i> Probar WhatsApp</button>
+        </form>
+        <a asp-action="Create" asp-route-tipo="Cita" class="btn btn-azul"><i class="bi bi-calendar-plus"></i> Nueva cita</a>
+        <a asp-action="Create" class="btn btn-outline-dark"><i class="bi bi-plus-lg"></i> Nuevo pago o recordatorio</a>
+    </div>
 </div>
 
 @if (!Model.Any())
 {
-    <div class="panel-caja vacio">Todavía no hay recordatorios. Crea el primero, por ejemplo «Pagar el internet» cada mes.</div>
+    <div class="panel-caja vacio">Todavía no hay recordatorios. Crea el primero, por ejemplo «Pagar el internet» cada mes, o una cita con hora.</div>
 }
 else
 {
     <div class="panel-caja p-0">
         <div class="table-responsive">
             <table class="table align-middle tabla-vic mb-0">
-                <thead><tr><th>Recordatorio</th><th>Cuándo</th><th>Próxima fecha</th><th>Aviso</th><th></th></tr></thead>
+                <thead><tr><th>Recordatorio</th><th>Cuándo</th><th>Próxima fecha</th><th>Aviso</th><th>WhatsApp</th><th></th></tr></thead>
                 <tbody>
                 @foreach (var r in Model)
                 {
@@ -29,19 +35,46 @@ else
                     <tr class="@(r.Activo ? "" : "text-muted")">
                         <td>
                             <strong>@r.Titulo</strong>
+                            @if (r.EsCita) { <span class="chip chip-azul"><i class="bi bi-calendar-event"></i> Cita</span> }
                             @if (!r.Activo) { <span class="chip chip-negro">Pausado</span> }
+                            @if (r.Empleado != null) { <div class="small"><i class="bi bi-person-badge"></i> Instructor: @r.Empleado.Nombre</div> }
+                            @if (r.Canino != null || r.Tutor != null)
+                            {
+                                <div class="small">
+                                    @if (r.Canino != null) { <i class="bi bi-balloon-heart-fill"></i> @r.Canino.Nombre }
+                                    @if (r.Tutor != null) { <span class="text-muted">@((r.Canino != null ? "· " : "") + r.Tutor.Nombre)</span> }
+                                </div>
+                            }
                             @if (!string.IsNullOrEmpty(r.Notas)) { <div class="small text-muted">@r.Notas</div> }
                         </td>
-                        <td>@r.Cuando</td>
+                        <td>@(r.Cuando + (r.HoraTexto != null ? ", " + r.HoraTexto : ""))</td>
                         <td>
                             @if (prox.HasValue)
                             {
-                                @prox.Value.Fecha()
+                                @(prox.Value.Fecha() + (r.HoraTexto != null ? " · " + r.HoraTexto : ""))
                                 @if (hecho) { <span class="chip estado-ok">Hecho</span> }
                             }
                             else { <span class="text-muted">Ya pasó</span> }
                         </td>
                         <td>@(r.AvisarDiasAntes == 0 ? "El mismo día" : r.AvisarDiasAntes == 1 ? "1 día antes" : r.AvisarDiasAntes + " días antes")</td>
+                        <td class="small">
+                            @if (!r.AvisarWhatsApp && !r.AvisarInstructorWhatsApp) { <span class="text-muted">—</span> }
+                            else
+                            {
+                                <div>
+                                    @if (r.AvisarWhatsApp) { <span class="chip chip-linea">Tú</span> }
+                                    @if (r.AvisarInstructorWhatsApp) { <span class="chip chip-linea">Instructor</span> }
+                                </div>
+                                @if (prox.HasValue)
+                                {
+                                    var f1 = r.Aviso1DiaFecha?.Date == prox.Value;
+                                    var f3 = r.Aviso3HorasFecha?.Date == prox.Value;
+                                    <div class="text-muted">
+                                        @("1 día: " + (f1 ? "enviado ✓" : "pendiente") + (r.Hora.HasValue ? " · 3 h: " + (f3 ? "enviado ✓" : "pendiente") : ""))
+                                    </div>
+                                }
+                            }
+                        </td>
                         <td class="text-end text-nowrap">
                             <a asp-action="Edit" asp-route-id="@r.Id" class="btn btn-sm btn-outline-dark">Editar</a>
                             <form asp-action="Delete" asp-route-id="@r.Id" method="post" class="d-inline" onsubmit="return confirm('¿Eliminar este recordatorio?');">

@@ -57,12 +57,16 @@
                     <li class="@(a.Dias < 0 ? "pendiente" : a.Dias == 0 ? "hoy" : "")">
                         <div class="rec-fecha"><span>@a.Fecha.Day</span><small>@a.Fecha.MesCorto()</small></div>
                         <div class="rec-texto">
-                            <strong>@a.Recordatorio.Titulo</strong>
+                            <strong>@if (a.Recordatorio.EsCita) { <i class="bi bi-calendar-event"></i> } @a.Recordatorio.Titulo</strong>
                             <div class="small">
                                 @if (a.Dias < 0) { <span>Era el @a.Fecha.Fecha(): sigue pendiente</span> }
                                 else if (a.Dias == 0) { <span>Es hoy</span> }
                                 else if (a.Dias == 1) { <span>Es mañana</span> }
                                 else { <span>Es en @a.Dias días</span> }
+                                @if (a.Recordatorio.HoraTexto != null) { <span> · <i class="bi bi-clock"></i> @a.Recordatorio.HoraTexto</span> }
+                                @if (a.Recordatorio.Empleado != null) { <span> · <i class="bi bi-person-badge"></i> @a.Recordatorio.Empleado.Nombre</span> }
+                                @if (a.Recordatorio.Canino != null) { <span> · @a.Recordatorio.Canino.Nombre</span> }
+                                @if (a.Recordatorio.Tutor != null) { <span> · @a.Recordatorio.Tutor.Nombre</span> }
                                 @if (!string.IsNullOrEmpty(a.Recordatorio.Notas)) { <span> · @a.Recordatorio.Notas</span> }
                             </div>
                         </div>

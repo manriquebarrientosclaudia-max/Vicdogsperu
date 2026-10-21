@@ -45,3 +45,14 @@ services:
         value: admin
       - key: Admin__Clave
         sync: false             # Render te la pedirá al crear el Blueprint
+      # ---- Avisos por WhatsApp (ver WHATSAPP.md) ----
+      - key: WhatsApp__TelefonoAdmin
+        sync: false             # tu número, con 51 (ej. 51987654321)
+      - key: WhatsApp__PhoneNumberId
+        sync: false             # ID del número en Meta WhatsApp Business
+      - key: WhatsApp__Token
+        sync: false             # token permanente de Meta
+      - key: WhatsApp__Plantilla
+        sync: false             # nombre de la plantilla aprobada (1 variable)
+      - key: WhatsApp__ClaveCron
+        sync: false             # clave secreta para el ping externo /Recordatorios/Procesar
